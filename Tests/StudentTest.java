@@ -1,6 +1,6 @@
-package Tests;
+package tests;
 
-import Models.Student;
+import models.Student;
 
 public class StudentTest {
     public static void main(String[] args) {

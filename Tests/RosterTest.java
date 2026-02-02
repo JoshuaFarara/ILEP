@@ -1,10 +1,10 @@
-package Tests;
+package tests;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import Models.Roster;
-import Models.RosterBuilder;
+import models.Roster;
+import models.RosterBuilder;
 
 
 public class RosterTest {
@@ -55,7 +55,7 @@ public class RosterTest {
         // System.out.println();
         roster.getRosterPathString();
         //after setting course code and section, print the roster
-        System.out.println(roster.toString());
+        // System.out.println(roster.toString());
         // add a roster to the list
         rosters.add(roster);
         

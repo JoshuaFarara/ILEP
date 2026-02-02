@@ -1,7 +1,5 @@
-package Models;
-import Models.Student;
-import Data.*;
-import java.io.File;
+package models;
+// import Data.*;
 
 /**
  * Roster class to hold an array of Students and course information
