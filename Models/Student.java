@@ -15,6 +15,14 @@ public class Student {
         major = null;
     }
 
+    public Student(String name) {
+        ID = 1;
+        age = 18;
+        setName(name);
+        year = 1;
+        major = null;
+    }
+
     public Student(int age, String name) {
         ID = 1;
         setAge(age);

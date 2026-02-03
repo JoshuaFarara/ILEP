@@ -52,25 +52,10 @@ public class RosterTest {
             default:
                 break;
         }
-        // System.out.println();
+
         roster.getRosterPathString();
-        //after setting course code and section, print the roster
-        // System.out.println(roster.toString());
-        // add a roster to the list
         rosters.add(roster);
         
-        // System.out.println(rosters.get(0).toString());
-
-        //create a roster builder to build multiple rosters
-        // RosterBuilder rosterBuilder = new RosterBuilder();
-        // File file = new File("roster1301.csv");
-
-        // 
-
         
-
-        // rosters.selectRoster("CSCI");
-        // select a roster by course number and section
-        // rosters.selectRoster("CSCI", 1301, 'A');
-    }
+}
 }

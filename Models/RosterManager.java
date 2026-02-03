@@ -6,14 +6,16 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class RosterManager {
-        ArrayList<Roster> rosters = new ArrayList<>();
+        ArrayList<Roster> rosters;
+        RosterBuilder builder = new RosterBuilder();
+        // Roster roster = new Roster();
         Scanner input = new Scanner(System.in);
         final static File DATA_FOLDER_PATH = new File("C:\\Users\\jfarara\\Documents\\Github\\ILEP\\Data");
         private static int numberOfRosters = 0;
 
 
     public RosterManager() {
-
+        rosters = new ArrayList<>();
     }
 
     public void addRoster(Roster roster) {
@@ -34,7 +36,7 @@ public class RosterManager {
         this.rosters = rosters;
     }
 
-    public static void readFilesInFolder() {
+    public void readFilesInFolder() {
         int numberofFiles = DATA_FOLDER_PATH.listFiles().length;
         System.out.println("--------------------------------Reading files from folder: " + DATA_FOLDER_PATH.getName());
         System.out.println("Files found: " + numberofFiles);
@@ -77,7 +79,7 @@ public class RosterManager {
         return rosterPath;
     }
     
-    public static void readFile(String fileName) {
+    public void readFile(String fileName) {
         for (File file : DATA_FOLDER_PATH.listFiles()) {
             if (file.getName().equals(fileName)){
                 int studentCount = 0; 
@@ -95,5 +97,39 @@ public class RosterManager {
             }
         }
     }
+
+    public Roster populateRosterFromFile(String fileName) {
+        Roster roster = new Roster(fileName);
+        for (File file : DATA_FOLDER_PATH.listFiles()) {
+            if (file.getName().equals(fileName)){
+                int studentCount = 0; 
+                try (Scanner input = new Scanner(file)) {
+                    while (input.hasNextLine()) {
+                        String name = input.nextLine().trim();
+                        Student student = new Student(name);
+                        studentCount++;
+                        System.out.println(studentCount + " " + student.getName());
+                        // namesList.add(name);
+                    }
+                } catch (FileNotFoundException e) {
+                    System.out.println("File not found: " + fileName);
+                    // e.printStackTrace();
+                }
+            }
+        }
+        addRoster(roster);
+        return roster;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+            "RosterManager: rosters=%s"
+            + "Number of Rosters=%d",rosters, getNumberOfRosters());
+    }
+    
+    
+
+    
 }
 

@@ -3,24 +3,34 @@ package models;
 
 /**
  * Roster class to hold an array of Students and course information
- * 
+ *
  */
-
 public class Roster {
-    private Student[] students;
 
+    private Student[] students;
+    private String rosterPathString;
     private String courseName;
     private String courseCode;
     private String courseSection;
 
-    public Roster(){
+    public Roster() {
         students = new Student[30]; // default size of 30 students
         courseName = "CSCI";
         courseCode = null;
         courseSection = "n";
         System.out.println("Roster created for course: " + courseName
-        + "\nyou will need to select the courseCode: " + courseCode
-        + "\nyou will need to select a section: " + courseSection);
+                + "\nyou will need to select the courseCode: " + courseCode
+                + "\nyou will need to select a section: " + courseSection);
+    }
+
+    public Roster(String filename) {
+        parseRosterFilename(filename);
+    }
+
+    public Roster(String courseName, String courseCode, String courseSection) {
+        this.courseName = courseName;
+        this.courseCode = courseCode;
+        this.courseSection = courseSection;
     }
 
     public String getCourseName() {
@@ -52,20 +62,25 @@ public class Roster {
         return String.format("The roster created is: %s%s%s", courseName, courseCode, courseSection);
     }
 
-    // public void selectRoster(String courseName) {
-        
-    //     if(courseName.equals(this.courseName)){
-    //         System.out.println("Roster selected: " + this.toString());
-    //     } else {
-    //         System.out.println("Roster not found for course name: " + courseName);
-    //     }
-    // }
-
     public String getRosterPathString() {
         return String.format("%s%s%s", courseName, courseCode, courseSection);
     }
 
-    
-    
-    
+    public void setStudents(Student[] students) {
+        this.students = students;
+    }
+
+    public void parseRosterFilename(String filename) {
+        // parse the rosterPathString to get courseName, courseCode, courseSection
+        String[] parts = filename.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+        if (parts.length >= 3) {
+            // Roster roster = new Roster();
+            setCourseName(parts[0]);
+            setCourseCode(parts[1]);
+            setCourseSection(parts[2]);
+            // return roster;
+        }
+        // return null;
+    }
+
 }

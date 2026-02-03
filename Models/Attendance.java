@@ -4,10 +4,15 @@ import java.util.ArrayList;
 
 public class Attendance {
     Student[] students;
+    RosterManager rosterManager;
     ArrayList<Student> present;
     ArrayList<Student> absent;
     Roster roster;
 
+    Attendance(){
+        
+    }
+    
     Attendance(Roster roster){
         setRosters(roster);
     }
@@ -20,8 +25,11 @@ public class Attendance {
         // this.students = roster.getStudents();
     }
 
-    public void populateAttendance(){
+    public void populateAttendance(Roster roster) {
+        // this.students = roster.getStudents();
+
     }
+    
 
     
 
