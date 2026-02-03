@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import models.Roster;
-import models.RosterBuilder;
+import models.RosterLoader;
 
 
 public class RosterTest {

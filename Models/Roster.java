@@ -67,6 +67,7 @@ public class Roster {
     }
 
     public void setStudents(Student[] students) {
+        
         this.students = students;
     }
 
