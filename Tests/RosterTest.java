@@ -1,56 +1,29 @@
 package tests;
 import java.util.Scanner;
 import models.Roster;
+import models.Student;
 
 
 public class RosterTest {
     public static void main(String[] args) {
-        Roster roster = new Roster();
         Scanner input = new Scanner(System.in);
-        /* features for a GUI
-        * THese features would be used in a GUI to select course name, code, and section
-        System.out.println("Select a course name: ");
-        */
-    //    System.out.println("Select a course name: ");
-    //     roster.setCourseName("CSCI");
-        System.out.println("Select a course code: 0--> 1301, 1--> 1302");
-        int courseCodeNumber = input.nextInt(); //scanner input
-        switch (courseCodeNumber) {
-            case 0:
-                roster.setCourseCode("1301");
-                break;
-            case 1:
-                roster.setCourseCode("1302");
-                break;
-            default:
-                break;
-        }
-
-        System.out.println("Select a course section: 0--> A, 1--> B, 2--> C, 3--> D, 4--> H");
-        int courseSectionNumber = input.nextInt(); //scanner input
-        switch (courseSectionNumber) {
-            case 0:
-                roster.setCourseSection("A");
-                break;
-            case 1:
-                roster.setCourseSection("B");
-                break;
-            case 2:
-                roster.setCourseSection("C");
-                break;
-            case 3:
-                roster.setCourseSection("D");
-                break;
-            case 4:
-                roster.setCourseSection("H");
-                break;
-            default:
-                break;
-        }
-
-        System.out.println(roster.getRosterPathString());
-        // rosters.add(roster);
+        String[] studentsNames = {"LastName, FirstName",
+                                "Coller, John",
+                                "Frazier, Jameson",
+                                "Franz, Carl",
+                                "Andrews, Phillip",
+                                "Jacobs, Maxuel"
+        };
+        //    Create a roster giving the courseName, code, section
+        Roster roster = new Roster();
+        roster.setCourseName("CSCI");
+        roster.setCourseCode("1301");
+        roster.setCourseSection("A");
+        roster.setStudents(studentsNames);
+        System.out.println(roster.toString());
+        roster.readStudentsInRoster();
         
-        
-}
+        // roster
+
+    }
 }
