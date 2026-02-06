@@ -1,4 +1,4 @@
-package FlowLogic;
+package flowLogic;
 
 public class ChooseRoster {
     public static void main(String[] args) {

@@ -33,6 +33,32 @@ public class RosterManager {
         this.rosters = rosters;
     }
 
+    public Roster getRoster() {
+        Scanner input = new Scanner(System.in);
+        // scanner input
+        for (Roster roster : rosters) {
+            System.out.println(rosters.indexOf(roster) + ": " + roster.getRosterPathString());
+        }
+        int index = input.nextInt();
+        for (Roster roster : rosters) {
+            if (rosters.indexOf(roster) == index) {
+                return roster;
+            }
+        }
+       
+        return null;
+    }
+
+    public Roster getRoster(String rosterName) {
+        for (Roster roster : rosters) {
+            if (roster.getRosterPathString().equals(rosterName)) {
+                return roster;
+            }
+        }
+        System.out.println("Roster not found: " + rosterName);
+        return null;
+    }
+
     @Override
     public String toString() {
         return String.format(

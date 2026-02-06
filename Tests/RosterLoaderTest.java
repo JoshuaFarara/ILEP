@@ -8,9 +8,12 @@ public class RosterLoaderTest {
         RosterLoader rosterLoader = new RosterLoader();
         RosterManager rosterManager = new RosterManager();
         rosterLoader.loadAll(rosterManager);
+        // 
+        // rosterManager.getRoster();
 
         // System.out.println("Number of rosters loaded: " + RosterManager.getNumberOfRosters());
-        System.out.println(rosterManager.toString());
+        // System.out.println(rosterManager.toString());
+
         
         // rosterLoader.getRosters();
         // rosterLoader.selectRosterFromFolder();
