@@ -27,7 +27,8 @@ public class RosterLoader {
         return numberOfRostersBuilt;
     }
 
-    public void readFilesInFolder() {
+    // read files from the Data folder
+    public void readFilesInFolder() { 
         int numberofFiles = DATA_FOLDER_PATH.listFiles().length;
         System.out.println("--------------------------------Reading files from folder: " + DATA_FOLDER_PATH.getName());
         System.out.println("Files found: " + numberofFiles);
@@ -38,15 +39,11 @@ public class RosterLoader {
         }
     }
 
-    // read folders from the Data folder
+    // retrieves files from the Data folder and returns the file name as a string
     public String getFileFromDataFolder(File DATA_FOLDER_PATH) {
         String fileName = null;
-        // File foldername = new File("C:\\Users\\jfarara\\Documents\\Github\\ILEP\\Data");
-        // fileIO.readFolder("Data")
         for (File file : DATA_FOLDER_PATH.listFiles()) {
-        // for (File file : foldername.listFiles()) {
             if (file.getName().equals(selectRosterFromFolder())){
-            // if (file.getName() == selectRosterFromFolder()){
                 fileName =  file.getName();
             }
             else {
@@ -56,6 +53,7 @@ public class RosterLoader {
         return fileName;
     }
 
+    // allows the user to select a roster from the Data folder and returns the file name as a string
     public String selectRosterFromFolder() {
         int numberofFiles = DATA_FOLDER_PATH.listFiles().length;
         System.out.println("--------------------------------Select a roster from below:------------------------------------------------------------------");
@@ -70,6 +68,32 @@ public class RosterLoader {
         return rosterPath;
     }
 
+    // reads the file selected by the user and populates a roster with the names of the students in the roster
+    public Roster populateRosterFromFile(String fileName) {
+        Roster roster = new Roster();
+        for (File file : DATA_FOLDER_PATH.listFiles()) {
+            if (file.getName().equals(fileName)){
+                int studentCount = 0; 
+                try (Scanner input = new Scanner(file)) {
+                    while (input.hasNextLine()) {
+                        String name = input.nextLine().trim();
+                        Student student = new Student(name);
+                        roster.addStudentsToRoster(student);
+                        studentCount++;
+                        System.out.println(studentCount + " " + student.getName());
+                        // namesList.add(name);
+                    }
+                } catch (FileNotFoundException e) {
+                    System.out.println("File not found: " + fileName);
+                    // e.printStackTrace();
+                }
+            }
+        }
+        // RosterManager.addRoster(roster);
+        return roster;
+    }
+
+    // reads the file selected by the user and prints the names of the students in the roster
     public void readFile(String fileName) {
         for (File file : DATA_FOLDER_PATH.listFiles()) {
             if (file.getName().equals(fileName)){
@@ -89,28 +113,7 @@ public class RosterLoader {
         }
     }
 
-    public Roster populateRosterFromFile(String fileName) {
-        Roster roster = new Roster(fileName);
-        for (File file : DATA_FOLDER_PATH.listFiles()) {
-            if (file.getName().equals(fileName)){
-                int studentCount = 0; 
-                try (Scanner input = new Scanner(file)) {
-                    while (input.hasNextLine()) {
-                        String name = input.nextLine().trim();
-                        Student student = new Student(name);
-                        studentCount++;
-                        System.out.println(studentCount + " " + student.getName());
-                        // namesList.add(name);
-                    }
-                } catch (FileNotFoundException e) {
-                    System.out.println("File not found: " + fileName);
-                    // e.printStackTrace();
-                }
-            }
-        }
-        // RosterManager.addRoster(roster);
-        return roster;
-    }
+    
 
     public String chooseRoster() {
         Roster roster = new Roster();

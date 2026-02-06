@@ -1,15 +1,10 @@
 package tests;
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Scanner;
-
 import models.Roster;
-import models.RosterLoader;
 
 
 public class RosterTest {
     public static void main(String[] args) {
-        ArrayList<Roster> rosters = new ArrayList<Roster>();
         Roster roster = new Roster();
         Scanner input = new Scanner(System.in);
         /* features for a GUI
@@ -53,8 +48,8 @@ public class RosterTest {
                 break;
         }
 
-        roster.getRosterPathString();
-        rosters.add(roster);
+        System.out.println(roster.getRosterPathString());
+        // rosters.add(roster);
         
         
 }

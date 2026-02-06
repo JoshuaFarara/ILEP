@@ -1,20 +1,23 @@
 package models;
 // import Data.*;
 
+import java.util.ArrayList;
+
+
 /**
  * Roster class to hold an array of Students and course information
  *
  */
 public class Roster {
 
-    private Student[] students;
+    private  ArrayList<Student> students;
     private String rosterPathString;
     private String courseName;
     private String courseCode;
     private String courseSection;
 
     public Roster() {
-        students = new Student[30]; // default size of 30 students
+        students = new ArrayList<Student>(); // ability to stor dynamic number of students
         courseName = "CSCI";
         courseCode = null;
         courseSection = "n";
@@ -67,9 +70,16 @@ public class Roster {
     }
 
     public void setStudents(Student[] students) {
-        
-        this.students = students;
+        this.students = new ArrayList<Student>();
+        for (Student student : students) {
+            this.students.add(student);
+        }
     }
+
+    public void addStudentsToRoster(Student student) {
+        this.students.add(student);
+    }
+           
 
     public void parseRosterFilename(String filename) {
         // parse the rosterPathString to get courseName, courseCode, courseSection
