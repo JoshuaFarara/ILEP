@@ -3,6 +3,9 @@ package models;
 import models.Student;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 
 /**
@@ -12,32 +15,74 @@ import java.util.ArrayList;
 public class Roster {
 
     private ArrayList<Student> students;
-    Student student;
-    private String rosterPathString;
+    private String crn;
+    private String semesterTerm;
+    private String year;
     private String courseName;
     private String courseCode;
     private String courseSection;
-    private static int numStudentsAdded;
+    private static int numStudentsAdded = 0;;
+
+    // Pattern to match the filename format: CRN-semesterTerm year-SUBJECTnumberSECTION.csv
+    private static final Pattern FILENAME_PATTERN = 
+        Pattern.compile("^(\\d+)-(\\w+)\\s+(\\d{4})-([A-Z]+)(\\d+)([A-Z])(\\.csv)?$");
 
     public Roster() {
-        students = new ArrayList<Student>(); // ability to stor dynamic number of students
+        students = new ArrayList<Student>(); // ability to store dynamic number of students
         courseName = "CSCI";
         courseCode = null;
         courseSection = null;
-        // System.out.println("Roster created for course: " + courseName
-        //         + "\nyou will need to select the courseCode: " + courseCode
-        //         + "\nyou will need to select a section: " + courseSection);
     }
+        
 
     public Roster(String filename) {
+        students = new ArrayList<Student>();
         parseRosterFilename(filename);
     }
 
-    public Roster(String courseName, String courseCode, String courseSection, Students[] students) {
+    public Roster(String courseName, String courseCode, String courseSection, ArrayList<Student> students) {
+        this.students = new ArrayList<Student>(); 
         setCourseName(courseName);
         setCourseCode(courseCode);
         setCourseSection(courseSection);
-        setStudents(students);
+ 
+    }
+
+    /**
+     * Parse the roster filename to extract course information
+     * Format: CRN-semesterTerm year-SUBJECTnumberSECTION.csv
+     * Example: 83129-Fall 2025-CSCI1302A.csv
+     */
+    public void parseRosterFilename(String filename) {
+        Matcher matcher = FILENAME_PATTERN.matcher(filename);
+        
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException(
+                "Invalid filename format. Expected: CRN-semesterTerm year-SUBJECTnumberSECTION.csv\n" +
+                "Example: 83129-Fall 2025-CSCI1302A.csv\n" +
+                "Got: " + filename
+            );
+        }
+        
+        this.crn = matcher.group(1);
+        this.semesterTerm = matcher.group(2);
+        this.year = matcher.group(3);
+        this.courseName = matcher.group(4);
+        this.courseCode = matcher.group(5);
+        this.courseSection = matcher.group(6);
+    }
+
+    // Getters and Setters
+    public String getCrn() {
+        return crn;
+    }
+
+    public String getSemesterTerm() {
+        return semesterTerm;
+    }
+
+    public String getYear() {
+        return year;
     }
 
     public String getCourseName() {
@@ -64,51 +109,37 @@ public class Roster {
         this.courseSection = courseSection;
     }
 
-    public ArrayList<Student> getStudents(){
+    public ArrayList<Student> getStudents() {
         return students;
     }
-    public int getNumStudentsAdded(){
+
+    public int getNumStudentsAdded() {
         return numStudentsAdded;
     }
 
-    @Override
+     @Override
     public String toString() {
-        return String.format("The roster created is: %s%s%s, with %d students", courseName, courseCode, courseSection, getNumStudentsAdded());
+        return String.format("Roster [CRN: %s, %s %s, %s%s Section %s, Students: %d]", 
+            crn, semesterTerm, year, courseName, courseCode, courseSection, numStudentsAdded);
     }
 
     public String getRosterPathString() {
         return String.format("%s%s%s", courseName, courseCode, courseSection);
     }
 
-    public void setStudents(String[] studentArr) {
-        for (String s : studentArr) {
-            student = new Student(s);
-            this.students.add(student);
-            numStudentsAdded++;
-        }
-    }
-
+    // Add a single student and increment counter
     public void addStudentToRoster(Student student) {
         this.students.add(student);
-    }
-    
-    public void readStudentsInRoster(){
-        System.out.println("The Students in this roster are: ");
-        for(Student s : students )
-            System.out.printf(" %s%n",s.getName());
+        numStudentsAdded++;
     }
 
-    public void parseRosterFilename(String filename) {
-        // parse the rosterPathString to get courseName, courseCode, courseSection
-        String[] parts = filename.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
-        if (parts.length >= 3) {
-            // Roster roster = new Roster();
-            setCourseName(parts[0]);
-            setCourseCode(parts[1]);
-            setCourseSection(parts[2]);
-            // return roster;
+    public void readStudentsInRoster() {
+        System.out.println("The Students in this roster are: ");
+        for (Student s : students) {
+            System.out.printf(" %s %s (Eagle ID: %s)%n", 
+                s.getFirstName(), s.getLastName(), s.getEagleID());
         }
-        // return null;
     }
+    
 
 }

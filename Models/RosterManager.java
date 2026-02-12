@@ -5,15 +5,13 @@ import java.util.Scanner;
 
 public class RosterManager {
         ArrayList<Roster> rosters;
-        // RosterBuilder builder = new RosterBuilder();
-        // Roster roster = new Roster();
         Scanner input = new Scanner(System.in);
         private static int numberOfRosters = 0;
 
 
     public RosterManager() {
         rosters = new ArrayList<>();
-    }
+        }
 
     public void addRoster(Roster roster) {
         rosters.add(roster);
@@ -34,6 +32,21 @@ public class RosterManager {
     }
 
     public Roster getRoster() {
+        Scanner input = new Scanner(System.in);
+        // scanner input
+        for (Roster roster : rosters) {
+            System.out.println(rosters.indexOf(roster) + ": " + roster.getRosterPathString());
+        }
+        int index = input.nextInt();
+        for (Roster roster : rosters) {
+            if (rosters.indexOf(roster) == index) {
+                return roster;
+            }
+        }
+       
+        return null;
+    }
+    public Roster getRosterClaude() {
         Scanner input = new Scanner(System.in);
         // scanner input
         for (Roster roster : rosters) {
