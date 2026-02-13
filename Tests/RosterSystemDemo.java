@@ -32,26 +32,26 @@ public class RosterSystemDemo {
             System.out.println(roster);
         }
         
-        // Example 3: Get a specific roster and display its students
-        if (RosterManager.getNumberOfRosters() > 0) {
-            System.out.println("\n=== Students in First Roster ===");
-            Roster firstRoster = manager.getRosters().get(0);
-            System.out.println("Roster Info: " + firstRoster);
-            firstRoster.readStudentsInRoster();
-        }
+        // // Example 3: Get a specific roster and display its students
+        // if (RosterManager.getNumberOfRosters() > 0) {
+        //     System.out.println("\n=== Students in First Roster ===");
+        //     Roster firstRoster = manager.getRosters().get(0);
+        //     System.out.println("Roster Info: " + firstRoster);
+        //     firstRoster.readStudentsInRoster();
+        // }
         
-        // Example 4: Load a single roster manually
-        System.out.println("\n=== Loading Single Roster ===");
-        try {
-            String testFilename = "83129-Fall 2025-CSCI1302A.csv";
-            Roster singleRoster = loader.populateRosterFromFile(testFilename);
-            System.out.println(singleRoster);
-            System.out.println("CRN: " + singleRoster.getCrn());
-            System.out.println("Semester: " + singleRoster.getSemesterTerm() + " " + singleRoster.getYear());
-            System.out.println("Course: " + singleRoster.getCourseName() + singleRoster.getCourseCode());
-            System.out.println("Section: " + singleRoster.getCourseSection());
-        } catch (Exception e) {
-            System.err.println("Error loading single roster: " + e.getMessage());
-        }
+        // // Example 4: Load a single roster manually
+        // System.out.println("\n=== Loading Single Roster ===");
+        // try {
+        //     String testFilename = "83129-Fall 2025-CSCI1302A.csv";
+        //     Roster singleRoster = loader.populateRosterFromFile(testFilename);
+        //     System.out.println(singleRoster);
+        //     System.out.println("CRN: " + singleRoster.getCrn());
+        //     System.out.println("Semester: " + singleRoster.getSemesterTerm() + " " + singleRoster.getYear());
+        //     System.out.println("Course: " + singleRoster.getCourseName() + singleRoster.getCourseCode());
+        //     System.out.println("Section: " + singleRoster.getCourseSection());
+        // } catch (Exception e) {
+        //     System.err.println("Error loading single roster: " + e.getMessage());
+        // }
     }
 }
