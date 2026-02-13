@@ -34,20 +34,6 @@ public class RosterSystemDemo {
             System.out.println(roster.toString());
         }
 
-        //Select a roster from the roster manager
-        // public String chooseRoster() {
-        // System.out.println("Select a roster for Attendance Management: "); 
-        // for(int i = 0; i < manager.getRosters().size(); i++) {
-        //     System.out.println(i + ": " + manager.getRosters().get(i).getRosterPathString());
-        // }
-        // int chosenRosterIndex = input.nextInt();
-        // switch (chosenRosterIndex) {
-        //     case 0 -> manager.getRosters().get(0);
-        //     case 1 -> manager.getRosters().get(1);
-        //     default -> {
-        //         System.out.println("Invalid index. Please select a valid roster index.");
-        //     }
-        // }
         // Example 3: Get a specific roster and display its students
         // if (RosterManager.getNumberOfRosters() > 0) {
         //     System.out.println("\n=== Select a Roster to View Students ===");
