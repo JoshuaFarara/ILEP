@@ -78,6 +78,16 @@ public class RosterManager {
             "RosterManager: rosters=%s"
             + "Number of Rosters=%d",rosters, getNumberOfRosters());
     }
+
+    // public String chooseRoster() {
+    //     System.out.println("Select a course code: 0--> 1301, 1--> 1302");
+    //     int courseCodeNumber = input.nextInt(); // scanner input
+    //     switch (courseCodeNumber) {
+    //          case 0 -> roster.setCourseCode("1301");
+    //         case 1 -> roster.setCourseCode("1302");
+    //         default -> {
+    //         }
+    //     }
     
     
 
