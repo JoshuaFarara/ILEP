@@ -49,15 +49,19 @@ public class RosterSystemDemo {
         //     }
         // }
         // Example 3: Get a specific roster and display its students
-        if (RosterManager.getNumberOfRosters() > 0) {
-            System.out.println("\n=== Select a Roster to View Students ===");
-            Roster firstRoster = chooseRoster(manager);
-            System.out.println("Roster Info: " + firstRoster);
-            firstRoster.readStudentsInRoster();
-        }
+        // if (RosterManager.getNumberOfRosters() > 0) {
+        //     System.out.println("\n=== Select a Roster to View Students ===");
+        //     Roster firstRoster = chooseRoster(manager);
+        //     System.out.println("Roster Info: " + firstRoster);
+        //     firstRoster.readStudentsInRoster();
+        // }
 
-        // // Example 4: Load a single roster manually
-        System.out.println("\n=== Loading Single Roster ===");
+        // // Example 4: Load a single selected roster manually
+        loadSelectedRoster(manager);
+    }
+
+    public static void loadSelectedRoster(RosterManager manager){
+                System.out.println("\n=== Loading Single Roster ===");
         try {
             // String testFilename = "83129-Fall 2025-CSCI1302A.csv"; // replace with choose a roster filename method later
             Roster selectedRoster = chooseRoster(manager);
@@ -71,6 +75,7 @@ public class RosterSystemDemo {
         } catch (Exception e) {
             System.err.println("Error loading single roster: " + e.getMessage());
         }
+
     }
 
     public static Roster chooseRoster(RosterManager manager) {
@@ -94,3 +99,4 @@ public class RosterSystemDemo {
     }
 
 }
+
