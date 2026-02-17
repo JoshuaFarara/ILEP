@@ -26,14 +26,14 @@ ILEP (Integrated Learning and Engagement Platform) is a comprehensive roster man
 
 ```
 ILEP/
-├── Data/                    # CSV roster files
-├── Models/                  # Core data models
+├── data/                    # CSV roster files
+├── models/                  # Core data models
 │   ├── Student.java        # Student entity class
 │   ├── Roster.java         # Roster container class
 │   ├── RosterLoader.java   # File I/O and CSV parsing
 │   └── RosterManager.java  # Roster collection management
-├── FlowLogic/              # Application flow and logic
-├── Tests/                  # Unit tests
+├── flowLogic/              # Application flow and logic
+├── tests/                  # Unit tests
 └── bin/                    # Compiled classes
 ```
 
