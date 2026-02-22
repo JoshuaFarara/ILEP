@@ -1,10 +1,9 @@
 package models;
-// import Data.*;
-import models.Student;
-
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+// import Student;
 
 
 
@@ -28,7 +27,7 @@ public class Roster {
         Pattern.compile("^(\\d+)-(\\w+)\\s+(\\d{4})-([A-Z]+)(\\d+)([A-Z])(\\.csv)?$");
 
     public Roster() {
-        students = new ArrayList<Student>(); // ability to store dynamic number of students
+        students = new ArrayList<>(); // ability to store dynamic number of students
         courseName = "CSCI";
         courseCode = null;
         courseSection = null;
@@ -36,7 +35,7 @@ public class Roster {
         
 
     public Roster(String filename) {
-        students = new ArrayList<Student>();
+        students = new ArrayList<>();
         parseRosterFilename(filename);
     }
 
@@ -58,9 +57,10 @@ public class Roster {
         
         if (!matcher.matches()) {
             throw new IllegalArgumentException(
-                "Invalid filename format. Expected: CRN-semesterTerm year-SUBJECTnumberSECTION.csv\n" +
-                "Example: 83129-Fall 2025-CSCI1302A.csv\n" +
-                "Got: " + filename
+                """
+                Invalid filename format. Expected: CRN-semesterTerm year-SUBJECTnumberSECTION.csv
+                Example: 83129-Fall 2025-CSCI1302A.csv
+                Got: """ + filename
             );
         }
         

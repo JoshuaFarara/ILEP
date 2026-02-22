@@ -13,7 +13,7 @@ public class RosterLoader {
 
     Scanner input = new Scanner(System.in);
     private static int numberOfRostersBuilt = 0;
-    final static File DATA_FOLDER_PATH = new File("C:\\Users\\jfarara\\Documents\\Github\\ILEP\\Data");
+    final static File DATA_FOLDER_PATH = new File("C:\\Users\\jfarara\\Documents\\Github\\ILEP\\src\\data");
     // final static File DATA_FOLDER_PATH = new File("H:\\git\\ILEP\\data");
 
 

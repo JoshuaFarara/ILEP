@@ -11,7 +11,7 @@ import models.RosterManager;
 public class RosterSystemDemo {
 
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
+        // Scanner input = new Scanner(System.in);
 
         System.out.println("=== Roster Management System Demo ===\n");
 
@@ -25,7 +25,7 @@ public class RosterSystemDemo {
         loader.loadAll(manager);
 
         System.out.println("\n=== Rosters Loaded ===");
-        System.out.println("Total rosters in manager: " + manager.getNumberOfRosters());
+        System.out.println("Total rosters in manager: " + RosterManager.getNumberOfRosters());
 
         // Example 2: Display all rosters
         // public void displayRosters() { 
@@ -65,23 +65,23 @@ public class RosterSystemDemo {
     }
 
     public static Roster chooseRoster(RosterManager manager) {
-        Scanner input = new Scanner(System.in);
-
-        System.out.println("Select a roster: ");
-        for (int i = 0; i < manager.getRosters().size(); i++) {
-            System.out.println(i + ": " + manager.getRosters().get(i).getRosterPathString());
-        }
-        int chosenRosterIndex = input.nextInt();
-        switch (chosenRosterIndex) {
-            case 0 ->
-                manager.getRosters().get(0);
-            case 1 ->
-                manager.getRosters().get(1);
-            default -> {
-                System.out.println("Invalid index. Please select a valid roster index.");
+        try (Scanner input = new Scanner(System.in)) {
+            System.out.println("Select a roster: ");
+            for (int i = 0; i < manager.getRosters().size(); i++) {
+                System.out.println(i + ": " + manager.getRosters().get(i).getRosterPathString());
             }
+            int chosenRosterIndex = input.nextInt();
+            switch (chosenRosterIndex) {
+                case 0 ->
+                    manager.getRosters().get(0);
+                case 1 ->
+                    manager.getRosters().get(1);
+                default -> {
+                    System.out.println("Invalid index. Please select a valid roster index.");
+                }
+            }
+            return manager.getRosters().get(chosenRosterIndex);
         }
-        return manager.getRosters().get(chosenRosterIndex);
     }
 
 }

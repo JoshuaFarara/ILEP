@@ -1,7 +1,4 @@
 package tests;
-import java.util.ArrayList;
-import models.Roster;
-import models.Student;
 
 
 public class RosterTest {
@@ -26,16 +23,16 @@ public class RosterTest {
 
 
 
-        ArrayList<Student> studentsList = new ArrayList<>();
-        studentsList.add(new Student("Coller, John"));
-        studentsList.add(new Student("Frazier, Jameson"));
-        studentsList.add(new Student("Franz, Carl"));
-        studentsList.add(new Student("Andrews, Phillip"));
-        studentsList.add(new Student("Jacobs, Maxuel"));
+        // ArrayList<Student> studentsList = new ArrayList<>();
+        // studentsList.add(new Student("Coller, John"));
+        // studentsList.add(new Student("Frazier, Jameson"));
+        // studentsList.add(new Student("Franz, Carl"));
+        // studentsList.add(new Student("Andrews, Phillip"));
+        // studentsList.add(new Student("Jacobs, Maxuel"));
 
         // // creat a roster using the convenience constructor that takes 3 parameters
-        Roster roster2 = new Roster("CSCI", "1301", "C", studentsList);
-        System.out.println(roster2.toString());
+        // Roster roster2 = new Roster("CSCI", "1301", "C", studentsList);
+        // System.out.println(roster2.toString());
         // roster2.readStudentsInRoster();
 
     }

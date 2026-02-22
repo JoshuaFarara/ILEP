@@ -1,7 +1,6 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 public class Attendance {
     Student[] students;
@@ -62,13 +61,13 @@ public class Attendance {
         loader.loadAll(manager);
         
         System.out.println("\n=== Rosters Loaded ===");
-        System.out.println("Total rosters in manager: " + manager.getNumberOfRosters());
+        System.out.println("Total rosters in manager: " + RosterManager.getNumberOfRosters());
         
         // Example 2: Display all rosters
         System.out.println("\n=== All Rosters ===");
-        for (Roster roster : manager.getRosters()) {
-            System.out.println(roster);
-        }
+        // for (Roster roster : manager.getRosters()) {
+        //     System.out.println(roster);
+        // }
         
         // Example 3: Get a specific roster and display its students
         if (RosterManager.getNumberOfRosters() > 0) {
