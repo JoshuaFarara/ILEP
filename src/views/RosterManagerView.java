@@ -16,9 +16,9 @@ public class RosterManagerView extends Application {
         TextField selectRoster = new TextField();
         selectRoster.setPromptText("Select a Roster"); //change to a dropdown menu, or list display
 
-// Create a button and place it in the scene
+        // Create a button and place it in the scene
         Button btOK = new Button("OK");
-        Scene scene = new Scene(btOK, 200, 250);
+        Scene scene = new Scene(btOK, 500, 500);
         primaryStage.setTitle("MyJavaFX"); // Set the stage title
         primaryStage.setScene(scene); // Place the scene in the stage
         primaryStage.show(); // Display the stage
