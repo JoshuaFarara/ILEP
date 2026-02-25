@@ -24,27 +24,41 @@ public class MenuBarView {
 	protected ArrayList<Button> listButtons = new ArrayList<>(Arrays.asList(arrButtons));
 
     public MenuBarView() {
-        // addButtonsToHBox();
+        addButtonsToHBox();
         // displayMenuBarScene();
     }
 
     protected Scene displayMenuBarScene() {
         VBox root = new VBox();
         root.getChildren().add(addButtonsToHBox());
-        return new Scene(root, 100, 100);
+        return new Scene(root);
     }
 
     
     protected HBox addButtonsToHBox() {
         HBox buttonBox = new HBox();
-        buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.setStyle("-fx-padding: 20;");
+        buttonBox.setPrefHeight(50);
+        buttonBox.setPrefWidth(805); 
+        // buttonBox.setAlignment(Pos.CENTER);
+        // buttonBox.setStyle("-fx-padding: 20;"); // does not work, try to add padding to the gridpane instead
+        // Set the preferred width to match the window width
+         // add padding and bottom border to the menu bar
+        // buttonBox.setStyle("-fx-border-color: #A99260; -fx-border-width: 0px 0px 100px 0px;"); // add bottom border to the menu bar
+        // buttonBox.setSpacing(10); // add horizontal gap between buttons
+        buttonBox.setStyle("-fx-background-color: #041E42;"); // set background color for the menu bar
+
         for (Button button : listButtons) {
+            int numButtons = listButtons.size();
+            double buttonWidth = 805.0 / numButtons; // Calculate button width based on number of buttons
+            double buttonHeight = 35.0; // Set button height to 50
+            button.setPrefWidth(buttonWidth);
+            button.setPrefHeight(buttonHeight);
             buttonBox.getChildren().add(button);
         }
+
         return buttonBox;
     }
 
 
-    
+
 }
