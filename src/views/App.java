@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -31,9 +32,11 @@ public class App extends Application {
 
 	@Override // Override the start method in the Application class
 	public void start(Stage primaryStage) {		
+		
+		
 		/*
 		Adding background image
-		// Refactor this code to a method in the future
+		// Refactor this code to a method in the future-
 		// refactor this into a class called BackgroundImageView
 		*/
 		Image image = new Image(getClass().getResource("/assets/images/sweetHeartCircleFront.jpg").toExternalForm());
@@ -41,6 +44,11 @@ public class App extends Application {
 		imageView.setFitWidth(BACKGROUND_IMAGE_WIDTH);
 		imageView.setFitHeight(BACKGROUND_IMAGE_HEIGHT);
 		imageView.setOpacity(.25); // add opacity to an image
+		
+		//Window Layout and Structure
+		BorderPane root = new BorderPane();
+		
+		
 
 		// Home/Main Text
 		Pane pane = new Pane(); // pane is used to show the text on the screen, used before showing gridpane
@@ -54,24 +62,45 @@ public class App extends Application {
 
 		//Display menu bar
 		MenuBarView menuBar = new MenuBarView();
+		root.setTop(menuBar.addButtonsToHBox());
+		menubar.showCenterPane();
+		
+		
+		//Button CLick Views: RosterManager, Attendance, SlideActivities, Quiz, CodeSubmission, Presenation
+		RosterManagerView rosterManagerView = new RosterManagerView();
 
-		GridPane gridPane = new GridPane();
-		gridPane.getChildren().add(menuBar.addButtonsToHBox()); 
+//		GridPane gridPane = new GridPane();
+//		gridPane.getChildren().add(menuBar.addButtonsToHBox()); 
 		// center this pane and add padding to the gridpane
 		// gridPane.setVgap(10); // add vertical gap between buttons
-		gridPane.setAlignment(Pos.TOP_CENTER);
+//		gridPane.setAlignment(Pos.TOP_CENTER);
+		
+		
+	
+		// when a menu button is selected the center root should change to that view
+		if 
+		root.setCenter(pane);
+		
 
 		// Adding stackpane to hold the background image, pane, and buttons on the
 		// gridpane
 		StackPane layout = new StackPane();
-		layout.getChildren().addAll(imageView, pane,  gridPane);
+		layout.getChildren().addAll(imageView, root);
 
 		// Scene creation and display
 		Scene scene = new Scene(layout, WINDOW_WIDTH, WINDOW_HEIGHT);
 		primaryStage.setTitle("Interactive Learning and Engagement Platform"); // Set the stage title
 		primaryStage.setScene(scene); // Place the scene in the stage
 		primaryStage.show(); // Display the stage
+		
+		
 	}
+	
+//	private Pane openView() {
+//		
+//		return pane;
+//		
+//	}
 
 	public static void main(String[] args) {
 		launch(args);
