@@ -22,7 +22,7 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class App extends Application {
-	// add window datamembers
+	// add window data members
 	final int WINDOW_WIDTH = 805;
 	final int WINDOW_HEIGHT = 600;
 	final int BACKGROUND_IMAGE_WIDTH = 805;
@@ -52,19 +52,26 @@ public class App extends Application {
 		text.setY(100);
 		pane.getChildren().add(text);
 
-		//Display menu bar
+		// Display Views
+		// Display menu bar
 		MenuBarView menuBar = new MenuBarView();
-
+		// Scene menuBarScene = menuBar.displayMenuBarScene();
+		
 		GridPane gridPane = new GridPane();
-		gridPane.getChildren().add(menuBar.addButtonsToHBox()); 
-		// center this pane and add padding to the gridpane
-		// gridPane.setVgap(10); // add vertical gap between buttons
-		gridPane.setAlignment(Pos.TOP_CENTER);
+			// styling the gridpane
+			gridPane.setAlignment(Pos.TOP_CENTER);
+			gridPane.getChildren().add(menuBar.addButtonsToHBox()); 
+			// gridPane.getChildren().add(menuBarScene); 
+			// center this pane and add padding to the gridpane
+			// gridPane.setVgap(10); // add vertical gap between buttons
+
+		//Scenes
+		
 
 		// Adding stackpane to hold the background image, pane, and buttons on the
 		// gridpane
 		StackPane layout = new StackPane();
-		layout.getChildren().addAll(imageView, pane,  gridPane);
+			layout.getChildren().addAll(imageView, gridPane); //  pane, 
 
 		// Scene creation and display
 		Scene scene = new Scene(layout, WINDOW_WIDTH, WINDOW_HEIGHT);
