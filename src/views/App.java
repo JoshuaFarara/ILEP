@@ -20,7 +20,7 @@ public class App extends Application {
 	final int WINDOW_WIDTH = 805;
 	final int WINDOW_HEIGHT = 600;
 	final int BACKGROUND_IMAGE_WIDTH = 805;
-	final int BACKGROUND_IMAGE_HEIGHT = 500;
+	final int BACKGROUND_IMAGE_HEIGHT = 525;
 	// Add Nodes
 
 	@Override // Override the start method in the Application class
@@ -56,17 +56,20 @@ public class App extends Application {
 		// Display Views
 		// Display menu bar
 		MenuBarView menuBar = new MenuBarView();
-
-		//Scenes
 		root.setTop(menuBar.addButtonsToHBox());
+		// when a menu button is selected the center root should change to that view
+		RosterManagerView rmv = new RosterManagerView();
+		root.setCenter(rmv);
+		
+		//Center of BorderPane
+		
+		
 //		menubar.showCenterPane();
 		
 		//Button CLick Views: RosterManager, Attendance, SlideActivities, Quiz, CodeSubmission, Presenation
-		RosterManagerView rosterManagerView = new RosterManagerView();
+//		RosterManagerView rosterManagerView = new RosterManagerView();
 
-		// when a menu button is selected the center root should change to that view
-//		if 
-		root.setCenter(pane);
+		
 		
 		// Adding stackpane to hold the background image, pane, and buttons on the
 		// gridpane

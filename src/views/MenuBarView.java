@@ -20,7 +20,7 @@ public class MenuBarView {
 	final Button btnPresentation = new Button("Presentation");
 	final Button btnEC = new Button("EC");
 	
-	private RosterManagerView rosterManagerView;
+	private RosterManagerView rosterManagerView = new RosterManagerView();
 
 	Button[] arrButtons = { btnRosterManager, btnAttendance, btnSlideActivities, btnQuiz, btnCodeSubmission, btnPresentation };
 	protected ArrayList<Button> listButtons = new ArrayList<>(Arrays.asList(arrButtons));
@@ -34,7 +34,7 @@ public class MenuBarView {
     
     //--Getters and Setters--
     public RosterManagerView getRosterManagerView() {
-		return rosterManagerView;
+		return rosterManagerView = new RosterManagerView();
 	}
 
 	public void setRosterManagerView(RosterManagerView rosterManagerView) {
