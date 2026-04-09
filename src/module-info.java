@@ -1,4 +1,4 @@
- module javafx {
+ module ILEP {
  	requires javafx.base;
  	requires javafx.controls;
  	requires javafx.graphics;

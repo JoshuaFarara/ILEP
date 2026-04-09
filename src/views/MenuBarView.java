@@ -12,13 +12,15 @@ import javafx.scene.layout.VBox;
 
 public class MenuBarView {
 
-    final Button btnRosterManager = new Button("Roster Manager");
+    final private Button btnRosterManager = new Button("Roster Manager");
 	final Button btnAttendance = new Button("Attendance");
 	final Button btnSlideActivities = new Button("Slide Activities");
 	final Button btnQuiz = new Button("Quiz");
 	final Button btnCodeSubmission = new Button("Code Submission");
 	final Button btnPresentation = new Button("Presentation");
 	final Button btnEC = new Button("EC");
+	
+	private RosterManagerView rosterManagerView;
 
 	Button[] arrButtons = { btnRosterManager, btnAttendance, btnSlideActivities, btnQuiz, btnCodeSubmission, btnPresentation };
 	protected ArrayList<Button> listButtons = new ArrayList<>(Arrays.asList(arrButtons));
@@ -26,9 +28,22 @@ public class MenuBarView {
     public MenuBarView() {
         // addButtonsToHBox();
         displayMenuBarScene();
+//        addButtonsToHBox();
+        // displayMenuBarScene();
     }
+    
+    //--Getters and Setters--
+    public RosterManagerView getRosterManagerView() {
+		return rosterManagerView;
+	}
 
-    protected Scene displayMenuBarScene() {
+	public void setRosterManagerView(RosterManagerView rosterManagerView) {
+		
+		this.rosterManagerView = new RosterManagerView();
+	}
+
+	
+	protected Scene displayMenuBarScene() {
         VBox root = new VBox();
         root.getChildren().add(addButtonsToHBox());
         return new Scene(root);
