@@ -1,29 +1,22 @@
 package views;
 
-import assets.images.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import javafx.application.Application;
-import javafx.geometry.Pos;
+
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class App extends Application {
-	// add window datamembers
+	// add window data members
 	final int WINDOW_WIDTH = 805;
 	final int WINDOW_HEIGHT = 600;
 	final int BACKGROUND_IMAGE_WIDTH = 805;
@@ -60,32 +53,25 @@ public class App extends Application {
 		text.setY(100);
 		pane.getChildren().add(text);
 
-		//Display menu bar
+		// Display Views
+		// Display menu bar
 		MenuBarView menuBar = new MenuBarView();
+
+		//Scenes
 		root.setTop(menuBar.addButtonsToHBox());
-		menubar.showCenterPane();
-		
+//		menubar.showCenterPane();
 		
 		//Button CLick Views: RosterManager, Attendance, SlideActivities, Quiz, CodeSubmission, Presenation
 		RosterManagerView rosterManagerView = new RosterManagerView();
 
-//		GridPane gridPane = new GridPane();
-//		gridPane.getChildren().add(menuBar.addButtonsToHBox()); 
-		// center this pane and add padding to the gridpane
-		// gridPane.setVgap(10); // add vertical gap between buttons
-//		gridPane.setAlignment(Pos.TOP_CENTER);
-		
-		
-	
 		// when a menu button is selected the center root should change to that view
-		if 
+//		if 
 		root.setCenter(pane);
 		
-
 		// Adding stackpane to hold the background image, pane, and buttons on the
 		// gridpane
 		StackPane layout = new StackPane();
-		layout.getChildren().addAll(imageView, root);
+			layout.getChildren().addAll(imageView, root); //  pane, 
 
 		// Scene creation and display
 		Scene scene = new Scene(layout, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -95,12 +81,6 @@ public class App extends Application {
 		
 		
 	}
-	
-//	private Pane openView() {
-//		
-//		return pane;
-//		
-//	}
 
 	public static void main(String[] args) {
 		launch(args);

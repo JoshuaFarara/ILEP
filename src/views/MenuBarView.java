@@ -26,6 +26,8 @@ public class MenuBarView {
 	protected ArrayList<Button> listButtons = new ArrayList<>(Arrays.asList(arrButtons));
 
     public MenuBarView() {
+        // addButtonsToHBox();
+        displayMenuBarScene();
 //        addButtonsToHBox();
         // displayMenuBarScene();
     }
