@@ -4,7 +4,8 @@
 # SENSITIVE DATA - Never commit real student data
 # ============================================
 Data/
-data/
+data/*
+!data/.gitkeep
 *.csv
 
 # ============================================

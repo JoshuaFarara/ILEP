@@ -20,7 +20,7 @@ public class MenuBarView {
 	final Button btnPresentation = new Button("Presentation");
 	final Button btnEC = new Button("EC");
 	
-	private RosterManagerView rosterManagerView = new RosterManagerView();
+//	private RosterManagerView rosterManagerView = new RosterManagerView();
 
 	Button[] arrButtons = { btnRosterManager, btnAttendance, btnSlideActivities, btnQuiz, btnCodeSubmission, btnPresentation };
 	protected ArrayList<Button> listButtons = new ArrayList<>(Arrays.asList(arrButtons));
@@ -33,14 +33,14 @@ public class MenuBarView {
     }
     
     //--Getters and Setters--
-    public RosterManagerView getRosterManagerView() {
-		return rosterManagerView = new RosterManagerView();
-	}
-
-	public void setRosterManagerView(RosterManagerView rosterManagerView) {
-		
-		this.rosterManagerView = new RosterManagerView();
-	}
+//    public RosterManagerView getRosterManagerView() {
+//		return rosterManagerView = new RosterManagerView();
+//	}
+//
+//	public void setRosterManagerView(RosterManagerView rosterManagerView) {
+//		
+//		this.rosterManagerView = new RosterManagerView();
+//	}
 
 	
 	protected Scene displayMenuBarScene() {
@@ -50,7 +50,7 @@ public class MenuBarView {
     }
 
     
-    protected HBox addButtonsToHBox() {
+    public HBox addButtonsToHBox() {
         HBox buttonBox = new HBox();
         buttonBox.setPrefHeight(50);
         buttonBox.setPrefWidth(805); 

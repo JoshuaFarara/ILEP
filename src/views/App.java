@@ -14,6 +14,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import models.RosterLoader;
+import models.RosterManager;
+import views.MenuBarView;
+import views.RosterManagerView;
 
 public class App extends Application {
 	// add window data members
@@ -21,7 +25,8 @@ public class App extends Application {
 	final int WINDOW_HEIGHT = 600;
 	final int BACKGROUND_IMAGE_WIDTH = 805;
 	final int BACKGROUND_IMAGE_HEIGHT = 525;
-	// Add Nodes
+	// Add models
+	
 
 	@Override // Override the start method in the Application class
 	public void start(Stage primaryStage) {		
@@ -58,7 +63,9 @@ public class App extends Application {
 		MenuBarView menuBar = new MenuBarView();
 		root.setTop(menuBar.addButtonsToHBox());
 		// when a menu button is selected the center root should change to that view
-		RosterManagerView rmv = new RosterManagerView();
+		RosterManager rm = new RosterManager();
+		RosterLoader rl = new RosterLoader();
+		RosterManagerView rmv = new RosterManagerView(rl,rm);
 		root.setCenter(rmv);
 		
 		//Center of BorderPane
