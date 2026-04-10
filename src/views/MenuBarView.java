@@ -26,22 +26,7 @@ public class MenuBarView {
 	protected ArrayList<Button> listButtons = new ArrayList<>(Arrays.asList(arrButtons));
 
     public MenuBarView() {
-        // addButtonsToHBox();
-        displayMenuBarScene();
-//        addButtonsToHBox();
-        // displayMenuBarScene();
     }
-    
-    //--Getters and Setters--
-//    public RosterManagerView getRosterManagerView() {
-//		return rosterManagerView = new RosterManagerView();
-//	}
-//
-//	public void setRosterManagerView(RosterManagerView rosterManagerView) {
-//		
-//		this.rosterManagerView = new RosterManagerView();
-//	}
-
 	
 	protected Scene displayMenuBarScene() {
         VBox root = new VBox();

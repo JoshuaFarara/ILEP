@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
@@ -13,6 +14,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import models.RosterLoader;
 import models.RosterManager;
@@ -76,13 +78,17 @@ public class RosterManagerView extends BorderPane {
 
 	private void showRosterDetail(Roster roster) {
 		rosterDetailView.getChildren().clear();
+		Label crn = new Label("CRN: "      + roster.getCrn());
+		Label course = new Label("Course: "   + roster.getCourseName());
+		Label section = new Label("Section: "  + roster.getCourseSection());
+		Label semester = new Label("Semester: " + roster.getSemesterTerm() + " " + roster.getYear());
+		Label studentSize = new Label("Students: " + roster.getStudents().size());
+		Group rosterDetailGroup= new Group();
+		rosterDetailGroup.getChildren().addAll(crn,course,section,semester,studentSize);
+		rosterDetailGroup.getStyleClass().add("label");
 
 		rosterDetailView.getChildren().addAll(
-	            new Label("CRN: "      + roster.getCrn()),
-	            new Label("Course: "   + roster.getCourseName()),
-	            new Label("Section: "  + roster.getCourseSection()),
-	            new Label("Semester: " + roster.getSemesterTerm() + " " + roster.getYear()),
-	            new Label("Students: " + roster.getStudents().size())
+	           crn,course,section,semester,studentSize
 //	             roster.getStudents()// comes from your model — View just displays it
 	        );
 	}
