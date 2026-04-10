@@ -3,6 +3,7 @@ package views;
 import java.util.Scanner;
 
 import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
@@ -19,6 +20,9 @@ import models.Roster;
 import models.Student;
 
 public class RosterManagerView extends BorderPane {
+	final int LIST_VIEW_WIDTH = 700;
+	final int LIST_VIEW_HEIGHT = 350;
+	
 	private Label title = new Label("Roster Manager");
 	private Button selectRoster = new Button("Select");
 	private Button loadRoster = new Button("Load Roster");
@@ -48,7 +52,7 @@ public class RosterManagerView extends BorderPane {
 	private ListView<Roster> buildRosterListVeiw() {
 		
 		ListView<Roster> lv = new ListView<>(FXCollections.observableArrayList(rm.getRosters()));
-		lv.setPrefSize(805, 350);
+		lv.setPrefSize(LIST_VIEW_WIDTH, LIST_VIEW_HEIGHT);
 		lv.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 		lv.getSelectionModel().selectedItemProperty().addListener(
@@ -63,7 +67,9 @@ public class RosterManagerView extends BorderPane {
 	 // shown before any roster is selected
     private VBox buildEmptyDetailPanel() {
         VBox box = new VBox();
-        box.setPrefHeight(350);
+        box.setPrefHeight(LIST_VIEW_HEIGHT);
+        box.setPadding(new Insets(15, 12, 15, 12));
+        box.setStyle("-fx-background-color: #336699;");
         box.getChildren().add(new Label("Select a roster to view details"));
         return box;
     }
