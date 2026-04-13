@@ -45,7 +45,7 @@ public class MenuBarView {
          // add padding and bottom border to the menu bar
         // buttonBox.setStyle("-fx-border-color: #A99260; -fx-border-width: 0px 0px 100px 0px;"); // add bottom border to the menu bar
         // buttonBox.setSpacing(10); // add horizontal gap between buttons
-        buttonBox.setStyle("-fx-background-color: #041E42;"); // set background color for the menu bar
+//        buttonBox.setStyle("-fx-background-color: #041E42;"); // set background color for the menu bar
 
         for (Button button : listButtons) {
             int numButtons = listButtons.size();

@@ -129,6 +129,7 @@ public class Student {
 
      @Override
     public String toString() {
-        return String.format("The student, %s %s with ID %s majoring in  %s.", firstName, lastName, eagleID, major);
+//        return String.format("The student, %s %s with ID %s majoring in  %s.", firstName, lastName, eagleID, major); // detailed toString
+    	 return String.format("%s %s", firstName, lastName);
 }
 }

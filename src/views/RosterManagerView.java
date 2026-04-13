@@ -1,5 +1,7 @@
 package views;
 
+import java.awt.Scrollbar;
+import java.util.List;
 import java.util.Scanner;
 
 import javafx.collections.FXCollections;
@@ -12,6 +14,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -24,7 +27,7 @@ import models.Student;
 public class RosterManagerView extends BorderPane {
 	final int LIST_VIEW_WIDTH = 700;
 	final int LIST_VIEW_HEIGHT = 350;
-	
+
 	private Label title = new Label("Roster Manager");
 	private Button selectRoster = new Button("Select");
 	private Button loadRoster = new Button("Load Roster");
@@ -35,65 +38,86 @@ public class RosterManagerView extends BorderPane {
 	Pane selectedRostersPane = new Pane();
 
 	public RosterManagerView(RosterLoader rl, RosterManager rm) {
-		this.rl= rl;
+		this.rl = rl;
 		this.rm = rm;
 		rl.loadAll(rm);
-		
+
 		rosterListView = buildRosterListVeiw();
 		rosterDetailView = buildEmptyDetailPanel();
-		
-		
+
 //		selectRoster.setText("Select a Roster");
 //		getChildren().addAll(selectRoster, loadRoster, new ScrollPane(rosterListView));
-		
+
 		setCenter(new ScrollPane(rosterListView));
-        setRight(rosterDetailView);
-	
+		setRight(rosterDetailView);
+
 	}
 
 	private ListView<Roster> buildRosterListVeiw() {
-		
+
 		ListView<Roster> lv = new ListView<>(FXCollections.observableArrayList(rm.getRosters()));
 		lv.setPrefSize(LIST_VIEW_WIDTH, LIST_VIEW_HEIGHT);
 		lv.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-		lv.getSelectionModel().selectedItemProperty().addListener(
-				(obs, oldVal, newVal) -> {
-					if(newVal!= null) {
-						showRosterDetail(newVal);
-					}
+		lv.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+			if (newVal != null) {
+				showRosterDetail(newVal);
+			}
 		});
 		return lv;
 	}
-	
-	 // shown before any roster is selected
-    private VBox buildEmptyDetailPanel() {
-        VBox box = new VBox();
-        box.setPrefHeight(LIST_VIEW_HEIGHT);
-        box.setPadding(new Insets(15, 12, 15, 12));
-        box.setStyle("-fx-background-color: #336699;");
-        box.getChildren().add(new Label("Select a roster to view details"));
-        return box;
-    }
 
+	// shown before any roster is selected
+	private VBox buildEmptyDetailPanel() {
+		VBox box = new VBox();
+		box.setPrefHeight(LIST_VIEW_HEIGHT);
+//		Insets(double top, double right,double bottom,double left); //the formal parameters
+		box.setPadding(new Insets(15, 12, 15, 12));
+		
+		box.setStyle("-fx-background-color: #336699;");
+		Label selectRoster = new Label("Select a roster to view details");
+		selectRoster.setStyle("-fx-text-fill:white");
+		box.getChildren().add(selectRoster);
+		return box;
+	}
+	private HBox showButtonsOnSelection() {
+		HBox hbox = new HBox();
+//		hbox.setPrefHeight(LIST_VIEW_HEIGHT);
+//		hbox.setPadding(new Insets(100,12 , 100, 12));
+//		rdButtons
+		rosterDetailView.getChildren().addAll(loadRoster);
+		return hbox;
+	};
+	
 	private void showRosterDetail(Roster roster) {
 		rosterDetailView.getChildren().clear();
 		Label crn = new Label("CRN: "      + roster.getCrn());
+		crn.setStyle("-fx-text-fill:white");
 		Label course = new Label("Course: "   + roster.getCourseName());
+		course.setStyle("-fx-text-fill:white");
 		Label section = new Label("Section: "  + roster.getCourseSection());
+		section.setStyle("-fx-text-fill:white");
 		Label semester = new Label("Semester: " + roster.getSemesterTerm() + " " + roster.getYear());
+		semester.setStyle("-fx-text-fill:white");
 		Label studentSize = new Label("Students: " + roster.getStudents().size());
+		studentSize.setStyle("-fx-text-fill:white");
+	
+		ListView<Student> lvStudents = new ListView<>(FXCollections.observableArrayList(roster.getStudents()));
+		ScrollPane viewStudentsInRoster = new ScrollPane(lvStudents);
 		Group rosterDetailGroup= new Group();
-		rosterDetailGroup.getChildren().addAll(crn,course,section,semester,studentSize);
-		rosterDetailGroup.getStyleClass().add("label");
-
+		rosterDetailGroup.getStyleClass().add("rd-label-group");
+		rosterDetailGroup.getChildren().addAll(crn,course,section,semester,studentSize,loadRoster,viewStudentsInRoster
+				);
+	
 		rosterDetailView.getChildren().addAll(
-	           crn,course,section,semester,studentSize
-//	             roster.getStudents()// comes from your model — View just displays it
+	           crn,course,section,semester,studentSize, viewStudentsInRoster,loadRoster	           
+//	           rosterDetailGroup        
 	        );
+//		HBox loadRosterButtonsPane = showButtonsOnSelection();
 	}
+
 	private void onRosterSelected(Roster roster) {
-        System.out.printf("Selected: %s%s%n", roster.getCourseCode(), roster.getCourseSection()); // swap for real UI later
+		System.out.printf("Selected: %s%s%n", roster.getCourseCode(), roster.getCourseSection()); // swap for real UI later
 
 //	public static void loadSelectedRoster(RosterManager manager) {
 //		System.out.println("\n=== Loading Single Roster ===");
@@ -117,10 +141,10 @@ public class RosterManagerView extends BorderPane {
 //					+ selectedRoster.getCourseCode()
 //					+ selectedRoster.getCourseSection());
 //
-////			return selectedRosterText ;
+		//// return selectedRosterText ;
 //		} catch (Exception e) {
 //			System.err.println("Error loading single roster: " + e.getMessage());
-////			return null;
+		//// return null;
 //		}
 
 	}

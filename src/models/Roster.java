@@ -119,8 +119,8 @@ public class Roster {
 
      @Override
     public String toString() {
-        return String.format("Roster [CRN: %s, %s %s, %s%s Section %s, Students: %d]", 
-            crn, semesterTerm, year, courseName, courseCode, courseSection, numStudentsAdded);
+        return String.format("%s%s%s %s%s%s Students: %d", 
+            crn, semesterTerm, year, courseName, courseCode, courseSection, students.size());
     }
 
     public String getRosterPathString() {

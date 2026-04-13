@@ -85,7 +85,7 @@ public class App extends Application {
 
 		// Scene creation and display
 		Scene scene = new Scene(layout, WINDOW_WIDTH, WINDOW_HEIGHT);
-//		scene.getStylesheets().add("views/stylesheet.css");
+		scene.getStylesheets().add("src/views/stylesheet.css");
 		primaryStage.setTitle("Interactive Learning and Engagement Platform"); // Set the stage title
 		primaryStage.setScene(scene); // Place the scene in the stage
 		primaryStage.show(); // Display the stage
