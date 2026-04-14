@@ -6,6 +6,8 @@ import java.util.Scanner;
 public class RosterManager {
         ArrayList<Roster> rosters;
         private static int numberOfRosters = 0;
+        private static int numStudentsAddedToAllRosters = 0;
+
 
 
     public RosterManager() {
@@ -45,6 +47,15 @@ public class RosterManager {
         }
         return null;
     }
+    
+//    public int getRosterStudentNumber() {
+//    	for (Roster roster : rosters) {
+////            System.out.println(rosters.indexOf(roster) + ": " + roster.getRosterPathString());
+//            roster.getNumStudentsAdded();
+//        }
+//		return null;
+//    }
+    
     public Roster getRosterClaude() {
         try (Scanner input = new Scanner(System.in)) {
             // scanner input

@@ -20,7 +20,7 @@ public class Roster {
     private String courseName;
     private String courseCode;
     private String courseSection;
-    private static int numStudentsAdded = 0;;
+//    private static int numStudentsAdded = 0;
 
     // Pattern to match the filename format: CRN-semesterTerm year-SUBJECTnumberSECTION.csv
     private static final Pattern FILENAME_PATTERN = 
@@ -113,14 +113,14 @@ public class Roster {
         return students;
     }
 
-    public int getNumStudentsAdded() {
-        return numStudentsAdded;
-    }
+//    public int getNumStudentsAdded() {
+//        return numStudentsAdded;
+//    }
 
      @Override
     public String toString() {
-        return String.format("%s%s%s %s%s%s Students: %d", 
-            crn, semesterTerm, year, courseName, courseCode, courseSection, students.size());
+        return String.format("%s%s\t%s%s%s\tStudents: %d", 
+            semesterTerm, year, courseName, courseCode, courseSection, students.size());
     }
 
     public String getRosterPathString() {
@@ -130,7 +130,7 @@ public class Roster {
     // Add a single student and increment counter
     public void addStudentToRoster(Student student) {
         this.students.add(student);
-        numStudentsAdded++;
+//        numStudentsAdded++;
     }
 
     public void readStudentsInRoster() {

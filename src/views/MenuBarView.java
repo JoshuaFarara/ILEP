@@ -10,9 +10,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-public class MenuBarView {
+public class MenuBarView { // change this class to extend HBox
 
-    final private Button btnRosterManager = new Button("Roster Manager");
+	final private Button btnRosterManager = new Button("Roster Manager");
 	final Button btnAttendance = new Button("Attendance");
 	final Button btnSlideActivities = new Button("Slide Activities");
 	final Button btnQuiz = new Button("Quiz");
@@ -20,45 +20,59 @@ public class MenuBarView {
 	final Button btnPresentation = new Button("Presentation");
 	final Button btnEC = new Button("EC");
 	
+	private Runnable onRosterClicked;
+
 //	private RosterManagerView rosterManagerView = new RosterManagerView();
 
-	Button[] arrButtons = { btnRosterManager, btnAttendance, btnSlideActivities, btnQuiz, btnCodeSubmission, btnPresentation };
+	Button[] arrButtons = { btnRosterManager, btnAttendance, btnSlideActivities, btnQuiz, btnCodeSubmission,
+			btnPresentation };
 	protected ArrayList<Button> listButtons = new ArrayList<>(Arrays.asList(arrButtons));
 
-    public MenuBarView() {
-    }
-	
-	protected Scene displayMenuBarScene() {
-        VBox root = new VBox();
-        root.getChildren().add(addButtonsToHBox());
-        return new Scene(root);
-    }
+	public MenuBarView() {
+//    	setSpacing(10); // extension updates
+//    	setPadding(new Insets(10)); // extension updates
+		wireButtons();
+	}
 
-    
-    public HBox addButtonsToHBox() {
-        HBox buttonBox = new HBox();
-        buttonBox.setPrefHeight(50);
-        buttonBox.setPrefWidth(805); 
-        // buttonBox.setAlignment(Pos.CENTER);
-        // buttonBox.setStyle("-fx-padding: 20;"); // does not work, try to add padding to the gridpane instead
-        // Set the preferred width to match the window width
-         // add padding and bottom border to the menu bar
-        // buttonBox.setStyle("-fx-border-color: #A99260; -fx-border-width: 0px 0px 100px 0px;"); // add bottom border to the menu bar
-        // buttonBox.setSpacing(10); // add horizontal gap between buttons
+	private void wireButtons() {
+		btnRosterManager.setOnAction(e -> {
+			if (onRosterClicked != null) onRosterClicked.run();
+		});
+
+	}
+
+	protected Scene displayMenuBarScene() {
+		VBox root = new VBox();
+		root.getChildren().add(addButtonsToHBox());
+		return new Scene(root);
+	}
+
+	public HBox addButtonsToHBox() {
+		HBox buttonBox = new HBox();
+		buttonBox.setPrefHeight(50);
+		buttonBox.setPrefWidth(805);
+		// buttonBox.setAlignment(Pos.CENTER);
+		// buttonBox.setStyle("-fx-padding: 20;"); // does not work, try to add padding
+		// to the gridpane instead
+		// Set the preferred width to match the window width
+		// add padding and bottom border to the menu bar
+		// buttonBox.setStyle("-fx-border-color: #A99260; -fx-border-width: 0px 0px
+		// 100px 0px;"); // add bottom border to the menu bar
+		// buttonBox.setSpacing(10); // add horizontal gap between buttons
 //        buttonBox.setStyle("-fx-background-color: #041E42;"); // set background color for the menu bar
 
-        for (Button button : listButtons) {
-            int numButtons = listButtons.size();
-            double buttonWidth = 805.0 / numButtons; // Calculate button width based on number of buttons
-            double buttonHeight = 35.0; // Set button height to 50
-            button.setPrefWidth(buttonWidth);
-            button.setPrefHeight(buttonHeight);
-            buttonBox.getChildren().add(button);
-        }
+		for (Button button : listButtons) {
+			int numButtons = listButtons.size();
+			double buttonWidth = 805.0 / numButtons; // Calculate button width based on number of buttons
+			double buttonHeight = 35.0; // Set button height to 50
+			button.setPrefWidth(buttonWidth);
+			button.setPrefHeight(buttonHeight);
+			buttonBox.getChildren().add(button);
+		}
 
-        return buttonBox;
-    }
-
-
+		return buttonBox;
+	}
+	
+	public void setOnRosterClicked(Runnable r) {onRosterClicked = r;}
 
 }

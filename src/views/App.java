@@ -61,13 +61,18 @@ public class App extends Application {
 		// Display Views
 		// Display menu bar
 		MenuBarView menuBar = new MenuBarView();
-		root.setTop(menuBar.addButtonsToHBox());
-		// when a menu button is selected the center root should change to that view
 		RosterManager rm = new RosterManager();
 		RosterLoader rl = new RosterLoader();
 		RosterManagerView rmv = new RosterManagerView(rl,rm);
-		root.setCenter(rmv);
 		
+		
+		root.setTop(menuBar.addButtonsToHBox());
+		// when a menu button is selected the center root should change to that view
+		menuBar.setOnRosterClicked(() -> root.setCenter(rmv));
+		
+		
+		
+//		root.setCenter(rmv);
 		//Center of BorderPane
 		
 		

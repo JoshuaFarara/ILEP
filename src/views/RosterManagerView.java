@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -43,12 +44,15 @@ public class RosterManagerView extends BorderPane {
 		rl.loadAll(rm);
 
 		rosterListView = buildRosterListVeiw();
+//		HBox rlvButtons = showCenterPaneButtons(rm.getRoster());
 		rosterDetailView = buildEmptyDetailPanel();
+//		studentsInAllRosters = 
 
 //		selectRoster.setText("Select a Roster");
-//		getChildren().addAll(selectRoster, loadRoster, new ScrollPane(rosterListView));
+		getChildren().addAll(selectRoster, loadRoster, new ScrollPane(rosterListView));
 
 		setCenter(new ScrollPane(rosterListView));
+//		setBottom(rlvButtons); 
 		setRight(rosterDetailView);
 
 	}
@@ -65,6 +69,15 @@ public class RosterManagerView extends BorderPane {
 			}
 		});
 		return lv;
+	}
+	private HBox showCenterPaneButtons(Roster roster) {
+		HBox listViewButtons = new HBox();
+		Label studentsInAllRosters = new Label();
+//		studentsInAllRosters.setText(String.valueOf(roster.getNumStudentsAdded()));
+		
+		Button lvRollCall = new Button("Roll Call"); 
+		listViewButtons.getChildren().addAll(studentsInAllRosters,lvRollCall);
+		return listViewButtons;
 	}
 
 	// shown before any roster is selected
