@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 
 public class MenuBarView { // change this class to extend HBox
 
+	final Button btnHome = new Button("Home");
 	final private Button btnRosterManager = new Button("Roster Manager");
 	final Button btnAttendance = new Button("Attendance");
 	final Button btnSlideActivities = new Button("Slide Activities");
@@ -20,11 +21,14 @@ public class MenuBarView { // change this class to extend HBox
 	final Button btnPresentation = new Button("Presentation");
 	final Button btnEC = new Button("EC");
 	
+	private Runnable onHomeClicked;
 	private Runnable onRosterClicked;
+	private Runnable onAttendanceClicked;
+	private Runnable onSlideActivitiesClicked;
 
 //	private RosterManagerView rosterManagerView = new RosterManagerView();
 
-	Button[] arrButtons = { btnRosterManager, btnAttendance, btnSlideActivities, btnQuiz, btnCodeSubmission,
+	Button[] arrButtons = { btnHome,btnRosterManager, btnAttendance, btnSlideActivities, btnQuiz, btnCodeSubmission,
 			btnPresentation };
 	protected ArrayList<Button> listButtons = new ArrayList<>(Arrays.asList(arrButtons));
 
@@ -35,8 +39,17 @@ public class MenuBarView { // change this class to extend HBox
 	}
 
 	private void wireButtons() {
+		btnHome.setOnAction(e -> {
+			if (onRosterClicked != null) onHomeClicked.run();
+		});
 		btnRosterManager.setOnAction(e -> {
 			if (onRosterClicked != null) onRosterClicked.run();
+		});
+		btnAttendance.setOnAction(e -> {
+			if (onRosterClicked != null) onAttendanceClicked.run();
+		});
+		btnSlideActivities.setOnAction(e -> {
+			if (onRosterClicked != null) onSlideActivitiesClicked.run();
 		});
 
 	}
@@ -73,6 +86,9 @@ public class MenuBarView { // change this class to extend HBox
 		return buttonBox;
 	}
 	
+	public void setOnHomeClicked(Runnable r) {onHomeClicked = r;}
 	public void setOnRosterClicked(Runnable r) {onRosterClicked = r;}
+	public void setOnAttendanceClicked(Runnable r) {onAttendanceClicked = r;}
+	public void setOnSlideActivitiesClicked(Runnable r) {onSlideActivitiesClicked = r;}
 
 }
