@@ -1,6 +1,8 @@
 package views;
 
 
+import java.io.File;
+
 import javafx.application.Application;
 
 import javafx.scene.Scene;
@@ -25,6 +27,8 @@ public class App extends Application {
 	final int WINDOW_HEIGHT = 600;
 	final int BACKGROUND_IMAGE_WIDTH = 805;
 	final int BACKGROUND_IMAGE_HEIGHT = 525;
+	final static File IMAGES_FOLDER = new File("C:\\Users\\jfarara\\Documents\\Github\\ILEP\\src\\assets\\images");
+
 	// Add models
 	
 
@@ -42,6 +46,8 @@ public class App extends Application {
 		imageView.setFitWidth(BACKGROUND_IMAGE_WIDTH);
 		imageView.setFitHeight(BACKGROUND_IMAGE_HEIGHT);
 		imageView.setOpacity(.25); // add opacity to an image
+		
+		
 		
 		//Window Layout and Structure
 		BorderPane root = new BorderPane();
@@ -61,7 +67,7 @@ public class App extends Application {
 		// Display Views
 		// Display menu bar
 		MenuBarView menuBar = new MenuBarView();
-		HomeView hv = new HomeView();
+		HomeView hv = new HomeView(IMAGES_FOLDER);
 		RosterManager rm = new RosterManager();
 		RosterLoader rl = new RosterLoader();
 		RosterManagerView rmv = new RosterManagerView(rl,rm);
@@ -76,7 +82,7 @@ public class App extends Application {
 		
 		
 		
-//		root.setCenter(rmv);
+		root.setCenter(hv);
 		//Center of BorderPane
 		
 		
