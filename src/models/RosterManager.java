@@ -32,8 +32,8 @@ public class RosterManager {
         this.rosters = rosters;
     }
 
-    public Roster getRoster() {
-        try (Scanner input = new Scanner(System.in)) {
+    public Roster getRoster(Scanner input) {
+  
             // scanner input
             for (Roster roster : rosters) {
                 System.out.println(rosters.indexOf(roster) + ": " + roster.getRosterPathString());
@@ -44,7 +44,7 @@ public class RosterManager {
                     return roster;
                 }
             }
-        }
+        
         return null;
     }
     
