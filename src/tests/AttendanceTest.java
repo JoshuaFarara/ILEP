@@ -43,6 +43,8 @@ public class AttendanceTest {
          System.out.println("Attendance Test");
          Attendance attendance = new Attendance(studentList);
          attendance.takeAttendance(studentList, input);
+         
+         
 //         attendance.readPresentStudents(studentList);
 //         attendance.populateAttendance(selectedRoster);
         // populateAttendance(attendance, selectedRoster);

@@ -69,7 +69,7 @@ public class Attendance {
 	// Old implementations where Attendance was performing roster loading and
 	// management.
 	public void readPresentStudents(ArrayList<Student> present) {
-		System.out.println("The Students in this roster are: ");
+		System.out.println("The Present Students in this roster are: ");
 		for (Student s : present) {
 			System.out.printf(" %s %s%n", s.getFirstName(), s.getLastName());
 		}
