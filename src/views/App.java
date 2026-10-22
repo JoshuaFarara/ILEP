@@ -27,14 +27,15 @@ public class App extends Application {
 	final int WINDOW_HEIGHT = 600;
 	final int BACKGROUND_IMAGE_WIDTH = 805;
 	final int BACKGROUND_IMAGE_HEIGHT = 525;
-	final static File IMAGES_FOLDER = new File("C:\\Users\\jfarara\\Documents\\Github\\ILEP\\src\\assets\\images");
+//	final static File IMAGES_FOLDER = new File("C:\\Users\\jfarara\\Documents\\Github\\ILEP\\src\\assets\\images"); //laptop
+	final static File IMAGES_FOLDER = new File("H:\\git\\ILEP\\src\\assets\\images"); //office desktop
 
 	// Add models
 	
 
 	@Override // Override the start method in the Application class
 	public void start(Stage primaryStage) {		
-		
+		System.out.println("Application starting...");
 		
 		/*
 		Adding background image

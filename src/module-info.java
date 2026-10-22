@@ -1,4 +1,4 @@
- module javafx {
+ module ILEP { //javafx on laptop, ILEP when desktop
  	requires javafx.base;
  	requires javafx.controls;
  	requires javafx.graphics;
