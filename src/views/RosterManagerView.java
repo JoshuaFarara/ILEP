@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -44,14 +45,20 @@ public class RosterManagerView extends BorderPane {
 		rl.loadAll(rm);
 
 		rosterListView = buildRosterListVeiw();
-//		HBox rlvButtons = showCenterPaneButtons(rm.getRoster());
 		rosterDetailView = buildEmptyDetailPanel();
-//		studentsInAllRosters = 
 
-//		selectRoster.setText("Select a Roster");
-		getChildren().addAll(selectRoster, loadRoster, new ScrollPane(rosterListView));
+
+		getChildren().addAll(loadRoster, new ScrollPane(rosterListView));
+//		getChildren().addAll(selectRoster, loadRoster, new ScrollPane(rosterListView));
 
 		setCenter(new ScrollPane(rosterListView));
+		rosterListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+			if (newVal != null) {		
+				setBottom(showCenterPaneButtons(newVal));
+			}	
+		});
+		
+		
 //		setBottom(rlvButtons); 
 		setRight(rosterDetailView);
 
@@ -61,7 +68,7 @@ public class RosterManagerView extends BorderPane {
 
 		ListView<Roster> lv = new ListView<>(FXCollections.observableArrayList(rm.getRosters()));
 		lv.setPrefSize(LIST_VIEW_WIDTH, LIST_VIEW_HEIGHT);
-		lv.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		lv.getSelectionModel().setSelectionMode(SelectionMode.SINGLE); //Change to multiple later
 
 		lv.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
 			if (newVal != null) {
@@ -75,8 +82,11 @@ public class RosterManagerView extends BorderPane {
 		Label studentsInAllRosters = new Label();
 //		studentsInAllRosters.setText(String.valueOf(roster.getNumStudentsAdded()));
 		
-		Button lvRollCall = new Button("Roll Call"); 
-		listViewButtons.getChildren().addAll(studentsInAllRosters,lvRollCall);
+		Button lvRollCall = new Button("Take Attendance"); 
+		listViewButtons.getChildren().addAll(lvRollCall);
+		lvRollCall.setOnAction((ActionEvent e) -> {
+			
+		});
 		return listViewButtons;
 	}
 
@@ -93,14 +103,14 @@ public class RosterManagerView extends BorderPane {
 		box.getChildren().add(selectRoster);
 		return box;
 	}
-	private HBox showButtonsOnSelection() {
-		HBox hbox = new HBox();
-//		hbox.setPrefHeight(LIST_VIEW_HEIGHT);
-//		hbox.setPadding(new Insets(100,12 , 100, 12));
-//		rdButtons
-		rosterDetailView.getChildren().addAll(loadRoster);
-		return hbox;
-	};
+//	private HBox showButtonsOnSelection() {
+//		HBox hbox = new HBox();
+////		hbox.setPrefHeight(LIST_VIEW_HEIGHT);
+////		hbox.setPadding(new Insets(100,12 , 100, 12));
+////		rdButtons
+//		rosterDetailView.getChildren().addAll(loadRoster);
+//		return hbox;
+//	};
 	
 	private void showRosterDetail(Roster roster) {
 		rosterDetailView.getChildren().clear();
@@ -117,20 +127,21 @@ public class RosterManagerView extends BorderPane {
 	
 		ListView<Student> lvStudents = new ListView<>(FXCollections.observableArrayList(roster.getStudents()));
 		ScrollPane viewStudentsInRoster = new ScrollPane(lvStudents);
-		Group rosterDetailGroup= new Group();
-		rosterDetailGroup.getStyleClass().add("rd-label-group");
-		rosterDetailGroup.getChildren().addAll(crn,course,section,semester,studentSize,loadRoster,viewStudentsInRoster
-				);
+//		Group rosterDetailGroup= new Group();
+//		rosterDetailGroup.getStyleClass().add("rd-label-group");
+//		rosterDetailGroup.getChildren().addAll(crn,course,section,semester,studentSize,loadRoster,viewStudentsInRoster
+//				);
 	
 		rosterDetailView.getChildren().addAll(
-	           crn,course,section,semester,studentSize, viewStudentsInRoster,loadRoster	           
+	           crn,course,section,semester,studentSize, viewStudentsInRoster
+//	           ,loadRoster	           
 //	           rosterDetailGroup        
 	        );
 //		HBox loadRosterButtonsPane = showButtonsOnSelection();
 	}
 
-	private void onRosterSelected(Roster roster) {
-		System.out.printf("Selected: %s%s%n", roster.getCourseCode(), roster.getCourseSection()); // swap for real UI later
+//	private void onRosterSelected(Roster roster) {
+//		System.out.printf("Selected: %s%s%n", roster.getCourseCode(), roster.getCourseSection()); // swap for real UI later
 
 //	public static void loadSelectedRoster(RosterManager manager) {
 //		System.out.println("\n=== Loading Single Roster ===");
@@ -160,23 +171,23 @@ public class RosterManagerView extends BorderPane {
 		//// return null;
 //		}
 
-	}
+//	}
 
-	public static Roster chooseRoster(RosterManager manager) {
-		try (Scanner input = new Scanner(System.in)) {
-			System.out.println("Select a roster: ");
-			for (int i = 0; i < manager.getRosters().size(); i++) {
-				System.out.println(i + ": " + manager.getRosters().get(i).getRosterPathString());
-			}
-			int chosenRosterIndex = input.nextInt();
-			switch (chosenRosterIndex) {
-			case 0 -> manager.getRosters().get(0);
-			case 1 -> manager.getRosters().get(1);
-			default -> {
-				System.out.println("Invalid index. Please select a valid roster index.");
-			}
-			}
-			return manager.getRosters().get(chosenRosterIndex);
-		}
-	}
+//	public static Roster chooseRoster(RosterManager manager) {
+//		try (Scanner input = new Scanner(System.in)) {
+//			System.out.println("Select a roster: ");
+//			for (int i = 0; i < manager.getRosters().size(); i++) {
+//				System.out.println(i + ": " + manager.getRosters().get(i).getRosterPathString());
+//			}
+//			int chosenRosterIndex = input.nextInt();
+//			switch (chosenRosterIndex) {
+//			case 0 -> manager.getRosters().get(0);
+//			case 1 -> manager.getRosters().get(1);
+//			default -> {
+//				System.out.println("Invalid index. Please select a valid roster index.");
+//			}
+//			}
+//			return manager.getRosters().get(chosenRosterIndex);
+//		}
+//	}
 }

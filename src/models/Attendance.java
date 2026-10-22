@@ -1,5 +1,7 @@
 package models;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,6 +12,9 @@ public class Attendance {
 	ArrayList<Student> absent;
 	Roster roster;
 	Scanner input = new Scanner(System.in);
+	File presentFile = new File("src/appData/present.txt");
+	File absentFile = new File("src/appData/absent.txt");
+
 
 	public Attendance() {
 
@@ -27,7 +32,10 @@ public class Attendance {
 		this.roster = roster;
 	}
 
-	public ArrayList<Student> takeAttendance(ArrayList<Student> studentList, Scanner input) {
+	public ArrayList<Student> takeAttendance(ArrayList<Student> studentList, Scanner input) throws java.io.IOException   {
+		PrintWriter presentOutput = new PrintWriter(presentFile);
+		PrintWriter absentOutput = new PrintWriter(absentFile);
+
 		present = new ArrayList<>();
 		absent = new ArrayList<>();
 		
@@ -37,20 +45,24 @@ public class Attendance {
 		System.out.println("Taking Attendance: ");
 		for (Student s : studentList) {
 			System.out.printf(" %s %s (Eagle ID: %s)%n", s.getFirstName(), s.getLastName(), s.getEagleID());
-			System.out.print("Absent: 0\nPresent: 1");
+			System.out.printf("Absent: 0%nPresent: 1%n");
 			attendanceMark = input.nextInt();
 //			boolean isPresent = false;
 			if (attendanceMark == 1) {
 				presentCount++;
 				present.add(s);
+				presentOutput.printf("%s %s%n",s.getFirstName(), s.getLastName());
 			} else if(attendanceMark==0){
 //				isPresent = false;
 				absentCount++;
 				absent.add(s); // this arraylist i smeant for logging, future emails etc
+				absentOutput.printf("%s %s%n",s.getFirstName(), s.getLastName());
 			}
 
 		}
 		readPresentStudents(present);
+		presentOutput.close();
+		absentOutput.close();
 		return present;
 	}
 	

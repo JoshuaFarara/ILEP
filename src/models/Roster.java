@@ -124,7 +124,7 @@ public class Roster {
     }
 
     public String getRosterPathString() {
-        return String.format("%s%s%s", courseName, courseCode, courseSection);
+        return String.format("%s %s%s%s", semesterTerm,courseName, courseCode, courseSection);
     }
 
     // Add a single student and increment counter

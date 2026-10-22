@@ -71,14 +71,14 @@ public class App extends Application {
 		RosterManager rm = new RosterManager();
 		RosterLoader rl = new RosterLoader();
 		RosterManagerView rmv = new RosterManagerView(rl,rm);
-//		AttendanceView av = new AttendanceView();
+		AttendanceView av = new AttendanceView(rm,rl);
 		
 		
 		root.setTop(menuBar.addButtonsToHBox());
 		// when a menu button is selected the center root should change to that view
 		menuBar.setOnHomeClicked(() -> root.setCenter(hv));
 		menuBar.setOnRosterClicked(() -> root.setCenter(rmv));
-//		menuBar.setOnAttendanceClicked(() -> root.setCenter(av));
+		menuBar.setOnAttendanceClicked(() -> root.setCenter(av));
 		
 		
 		
