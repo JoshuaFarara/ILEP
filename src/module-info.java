@@ -6,7 +6,9 @@
  	requires javafx.fxml;
 	requires java.desktop;
 
+	exports app;
  	exports models;
+ 	exports controllers;
  	exports tests;
  	exports views;
  	exports flowLogic;

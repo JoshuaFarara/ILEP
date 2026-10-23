@@ -1,4 +1,4 @@
-package views;
+package app;
 
 
 import java.io.File;
@@ -18,6 +18,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import models.RosterLoader;
 import models.RosterManager;
+import views.AttendanceView;
+import views.HomeView;
 import views.MenuBarView;
 import views.RosterManagerView;
 
