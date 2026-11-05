@@ -6,7 +6,13 @@
 Data/
 data/*
 !data/.gitkeep
+**/data/*
+!**/data/.gitkeep
 *.csv
+
+# Attendance output (present.txt, absent.txt, future dated logs) - real names
+**/appData/*
+!**/appData/.gitkeep
 
 # ============================================
 # Java Compiled Files
