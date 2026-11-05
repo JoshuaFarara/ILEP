@@ -58,6 +58,7 @@ public class AttendanceView extends BorderPane {
 	private Consumer<Boolean> onMarkAll;
 	private Runnable onSave;
 	private Runnable onChangeRosters;
+	private Runnable onStartClassSession;
 
 	public AttendanceView() {
 		setPadding(new Insets(10));
@@ -152,8 +153,10 @@ public class AttendanceView extends BorderPane {
 		save.setOnAction(e -> run(onSave));
 		Button changeRosters = new Button("Change Rosters");
 		changeRosters.setOnAction(e -> run(onChangeRosters));
+		Button startSession = new Button("Start Class Session");
+		startSession.setOnAction(e -> run(onStartClassSession));
 
-		setBottom(buttonBar(allPresent, clearAll, save, changeRosters, countsLabel));
+		setBottom(new VBox(4, buttonBar(allPresent, clearAll, save, changeRosters, startSession), countsLabel));
 	}
 
 	/** Updates every checkbox to match the model, without reporting the changes back. */
@@ -195,6 +198,7 @@ public class AttendanceView extends BorderPane {
 	public void setOnMarkAll(Consumer<Boolean> handler) { onMarkAll = handler; }
 	public void setOnSave(Runnable handler) { onSave = handler; }
 	public void setOnChangeRosters(Runnable handler) { onChangeRosters = handler; }
+	public void setOnStartClassSession(Runnable handler) { onStartClassSession = handler; }
 
 	// ---------------------------------------------------------------- helpers
 	private void fireMarkAll(boolean present) {

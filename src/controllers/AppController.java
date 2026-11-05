@@ -23,6 +23,7 @@ public class AppController {
 	private final HomeController homeController;
 	private final RosterManagerController rosterManagerController;
 	private final AttendanceController attendanceController;
+	private final ClassSessionController classSessionController;
 
 	public AppController(File imagesFolder) {
 		// Model: load rosters once; every controller shares them through AppState
@@ -38,6 +39,7 @@ public class AppController {
 		homeController = new HomeController(imagesFolder);
 		rosterManagerController = new RosterManagerController(state);
 		attendanceController = new AttendanceController(state);
+		classSessionController = new ClassSessionController(state);
 
 		wireMenu();
 		state.currentScreenProperty().addListener((obs, oldScreen, newScreen) -> show(newScreen));
@@ -53,6 +55,7 @@ public class AppController {
 		menuBar.setOnHomeClicked(() -> state.navigateTo(Screen.HOME));
 		menuBar.setOnRosterClicked(() -> state.navigateTo(Screen.ROSTER_MANAGER));
 		menuBar.setOnAttendanceClicked(() -> state.navigateTo(Screen.ATTENDANCE));
+		menuBar.setOnClassSessionClicked(() -> state.navigateTo(Screen.CLASS_SESSION));
 	}
 
 	private void show(Screen screen) {
@@ -60,6 +63,7 @@ public class AppController {
 		case HOME -> mainView.setContent(homeController.getView());
 		case ROSTER_MANAGER -> mainView.setContent(rosterManagerController.getView());
 		case ATTENDANCE -> mainView.setContent(attendanceController.getView());
+		case CLASS_SESSION -> mainView.setContent(classSessionController.getView());
 		}
 	}
 }

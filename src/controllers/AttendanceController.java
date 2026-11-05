@@ -27,6 +27,7 @@ public class AttendanceController {
 		view.setOnMarkAll(this::handleMarkAll);
 		view.setOnSave(this::handleSave);
 		view.setOnChangeRosters(this::handleChangeRosters);
+		view.setOnStartClassSession(() -> state.navigateTo(AppState.Screen.CLASS_SESSION));
 
 		// Re-render whenever a roll call is started or ended anywhere in the app
 		state.attendanceSessionProperty().addListener((obs, oldSession, newSession) -> render(newSession));
