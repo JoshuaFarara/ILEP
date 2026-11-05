@@ -1,8 +1,13 @@
 package models;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Attendance {
@@ -14,6 +19,15 @@ public class Attendance {
 	Scanner input = new Scanner(System.in);
 	File presentFile = new File("src/appData/present.txt");
 	File absentFile = new File("src/appData/absent.txt");
+
+	// --- GUI roll call session state ---
+	// One roll call can span several rosters (e.g. combined sections).
+	private final ArrayList<Roster> rosters = new ArrayList<>();
+	// Student -> roster they were first found in (insertion order kept for display)
+	private final LinkedHashMap<Student, Roster> studentRoster = new LinkedHashMap<>();
+	// Student -> present (true) / absent (false)
+	private final LinkedHashMap<Student, Boolean> marks = new LinkedHashMap<>();
+	private LocalDate date = LocalDate.now();
 
 
 	public Attendance() {
@@ -28,8 +42,115 @@ public class Attendance {
 		readStudentsInRoster(studentList);
 	}
 
+	/** Start one roll call that combines every student in the given rosters. */
+	public Attendance(List<Roster> rosters) {
+		setRosters(rosters);
+	}
+
 	public void setRoster(Roster roster) {
 		this.roster = roster;
+		setRosters(roster == null ? List.of() : List.of(roster));
+	}
+
+	/**
+	 * Builds a single combined student list from the given rosters. A student who
+	 * appears in more than one selected roster (same Eagle ID) is only listed once.
+	 * Every student starts out marked absent.
+	 */
+	public void setRosters(List<Roster> selected) {
+		rosters.clear();
+		studentRoster.clear();
+		marks.clear();
+		ArrayList<String> seenIds = new ArrayList<>();
+		for (Roster r : selected) {
+			rosters.add(r);
+			for (Student s : r.getStudents()) {
+				String id = s.getEagleID();
+				if (id != null && seenIds.contains(id)) {
+					continue;
+				}
+				if (id != null) {
+					seenIds.add(id);
+				}
+				studentRoster.put(s, r);
+				marks.put(s, false);
+			}
+		}
+	}
+
+	public List<Roster> getRosters() {
+		return new ArrayList<>(rosters);
+	}
+
+	/** All students in this roll call, in roster order. */
+	public List<Student> getStudents() {
+		return new ArrayList<>(marks.keySet());
+	}
+
+	/** The roster a student in this roll call came from. */
+	public Roster getRosterFor(Student s) {
+		return studentRoster.get(s);
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
+	public void mark(Student s, boolean isPresent) {
+		if (marks.containsKey(s)) {
+			marks.put(s, isPresent);
+		}
+	}
+
+	public boolean isPresent(Student s) {
+		return marks.getOrDefault(s, false);
+	}
+
+	public void markAll(boolean isPresent) {
+		for (Map.Entry<Student, Boolean> e : marks.entrySet()) {
+			e.setValue(isPresent);
+		}
+	}
+
+	public List<Student> getPresentStudents() {
+		ArrayList<Student> list = new ArrayList<>();
+		for (Map.Entry<Student, Boolean> e : marks.entrySet()) {
+			if (e.getValue()) list.add(e.getKey());
+		}
+		return list;
+	}
+
+	public List<Student> getAbsentStudents() {
+		ArrayList<Student> list = new ArrayList<>();
+		for (Map.Entry<Student, Boolean> e : marks.entrySet()) {
+			if (!e.getValue()) list.add(e.getKey());
+		}
+		return list;
+	}
+
+	/**
+	 * Writes the current roll call to present.txt / absent.txt, one "First Last"
+	 * per line (same format as the console takeAttendance). Also updates each
+	 * Student's attendanceStatus so other views see the result.
+	 */
+	public void saveAttendance() throws IOException {
+		present = new ArrayList<>(getPresentStudents());
+		absent = new ArrayList<>(getAbsentStudents());
+		try (PrintWriter presentOutput = new PrintWriter(presentFile);
+				PrintWriter absentOutput = new PrintWriter(absentFile)) {
+			for (Student s : present) {
+				s.setAttendanceStatus(true);
+				presentOutput.printf("%s %s%n", s.getFirstName(), s.getLastName());
+			}
+			for (Student s : absent) {
+				s.setAttendanceStatus(false);
+				absentOutput.printf("%s %s%n", s.getFirstName(), s.getLastName());
+			}
+		}
 	}
 
 	public ArrayList<Student> takeAttendance(ArrayList<Student> studentList, Scanner input) throws java.io.IOException   {

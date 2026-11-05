@@ -1,10 +1,11 @@
 package views;
 
-import java.awt.Scrollbar;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.function.Consumer;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -38,11 +39,17 @@ public class RosterManagerView extends BorderPane {
 	private ListView<Roster> rosterListView;
 	private VBox rosterDetailView;
 	Pane selectedRostersPane = new Pane();
+	// Called with the selected rosters when "Take Attendance" is clicked
+	private Consumer<List<Roster>> onTakeAttendance;
 
 	public RosterManagerView(RosterLoader rl, RosterManager rm) {
 		this.rl = rl;
 		this.rm = rm;
-		rl.loadAll(rm);
+		// Rosters are loaded once in App before views are built; loading here again
+		// would add every roster to the shared RosterManager a second time.
+		if (rm.getRosters().isEmpty()) {
+			rl.loadAll(rm);
+		}
 
 		rosterListView = buildRosterListVeiw();
 		rosterDetailView = buildEmptyDetailPanel();
@@ -52,11 +59,7 @@ public class RosterManagerView extends BorderPane {
 //		getChildren().addAll(selectRoster, loadRoster, new ScrollPane(rosterListView));
 
 		setCenter(new ScrollPane(rosterListView));
-		rosterListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-			if (newVal != null) {		
-				setBottom(showCenterPaneButtons(newVal));
-			}	
-		});
+		setBottom(showCenterPaneButtons());
 		
 		
 //		setBottom(rlvButtons); 
@@ -68,7 +71,8 @@ public class RosterManagerView extends BorderPane {
 
 		ListView<Roster> lv = new ListView<>(FXCollections.observableArrayList(rm.getRosters()));
 		lv.setPrefSize(LIST_VIEW_WIDTH, LIST_VIEW_HEIGHT);
-		lv.getSelectionModel().setSelectionMode(SelectionMode.SINGLE); //Change to multiple later
+		// Ctrl/Shift + click to select several rosters for one combined roll call
+		lv.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 		lv.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
 			if (newVal != null) {
@@ -77,17 +81,43 @@ public class RosterManagerView extends BorderPane {
 		});
 		return lv;
 	}
-	private HBox showCenterPaneButtons(Roster roster) {
-		HBox listViewButtons = new HBox();
-		Label studentsInAllRosters = new Label();
-//		studentsInAllRosters.setText(String.valueOf(roster.getNumStudentsAdded()));
-		
-		Button lvRollCall = new Button("Take Attendance"); 
-		listViewButtons.getChildren().addAll(lvRollCall);
+	private HBox showCenterPaneButtons() {
+		HBox listViewButtons = new HBox(10);
+		listViewButtons.setPadding(new Insets(8));
+		listViewButtons.setAlignment(Pos.CENTER_LEFT);
+
+		Button lvRollCall = new Button("Take Attendance");
+		Label selectedInfo = new Label();
+		updateSelectedInfo(selectedInfo);
+		lvRollCall.setDisable(true);
+		rosterListView.getSelectionModel().getSelectedItems()
+				.addListener((ListChangeListener<Roster>) c -> {
+					updateSelectedInfo(selectedInfo);
+					lvRollCall.setDisable(rosterListView.getSelectionModel().getSelectedItems().isEmpty());
+				});
+
+		listViewButtons.getChildren().addAll(lvRollCall, selectedInfo);
 		lvRollCall.setOnAction((ActionEvent e) -> {
-			
+			List<Roster> selected = new ArrayList<>(rosterListView.getSelectionModel().getSelectedItems());
+			if (!selected.isEmpty() && onTakeAttendance != null) {
+				onTakeAttendance.accept(selected);
+			}
 		});
 		return listViewButtons;
+	}
+
+	private void updateSelectedInfo(Label label) {
+		List<Roster> selected = rosterListView.getSelectionModel().getSelectedItems();
+		int students = 0;
+		for (Roster r : selected) {
+			students += r.getStudents().size();
+		}
+		label.setText(selected.size() + " roster(s) selected, " + students + " students");
+	}
+
+	/** App wires this to switch to the AttendanceView with the chosen rosters. */
+	public void setOnTakeAttendance(Consumer<List<Roster>> handler) {
+		this.onTakeAttendance = handler;
 	}
 
 	// shown before any roster is selected

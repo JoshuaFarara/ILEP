@@ -24,7 +24,8 @@ public class Roster {
 
     // Pattern to match the filename format: CRN-semesterTerm year-SUBJECTnumberSECTION.csv
     private static final Pattern FILENAME_PATTERN = 
-        Pattern.compile("^(\\d+)-(\\w+)\\s+(\\d{4})-([A-Z]+)(\\d+)([A-Z])(\\.csv)?$");
+        // Section is a letter optionally followed by letters/digits: A, AHCD, F65
+        Pattern.compile("^(\\d+)-(\\w+)\\s+(\\d{4})-([A-Z]+)(\\d+)([A-Z][A-Z0-9]*)(\\.csv)?$");
 
     public Roster() {
         students = new ArrayList<>(); // ability to store dynamic number of students

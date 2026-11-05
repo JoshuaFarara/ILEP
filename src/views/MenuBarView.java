@@ -40,16 +40,16 @@ public class MenuBarView { // change this class to extend HBox
 
 	private void wireButtons() {
 		btnHome.setOnAction(e -> {
-			if (onRosterClicked != null) onHomeClicked.run();
+			if (onHomeClicked != null) onHomeClicked.run();
 		});
 		btnRosterManager.setOnAction(e -> {
 			if (onRosterClicked != null) onRosterClicked.run();
 		});
 		btnAttendance.setOnAction(e -> {
-			if (onRosterClicked != null) onAttendanceClicked.run();
+			if (onAttendanceClicked != null) onAttendanceClicked.run();
 		});
 		btnSlideActivities.setOnAction(e -> {
-			if (onRosterClicked != null) onSlideActivitiesClicked.run();
+			if (onSlideActivitiesClicked != null) onSlideActivitiesClicked.run();
 		});
 
 	}

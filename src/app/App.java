@@ -73,15 +73,21 @@ public class App extends Application {
 		HomeView hv = new HomeView(IMAGES_FOLDER);
 		RosterManager rm = new RosterManager();
 		RosterLoader rl = new RosterLoader();
+		rl.loadAll(rm); // load rosters once; every view shares this RosterManager
 		RosterManagerView rmv = new RosterManagerView(rl,rm);
-		AttendanceView av = new AttendanceView(rm,rl);
-		
-		
+		AttendanceView av = new AttendanceView(rm);
+
+
 		root.setTop(menuBar.addButtonsToHBox());
 		// when a menu button is selected the center root should change to that view
 		menuBar.setOnHomeClicked(() -> root.setCenter(hv));
 		menuBar.setOnRosterClicked(() -> root.setCenter(rmv));
 		menuBar.setOnAttendanceClicked(() -> root.setCenter(av));
+		// "Take Attendance" in the roster list -> roll call for the selected rosters
+		rmv.setOnTakeAttendance(rosters -> {
+			av.startRollCall(rosters);
+			root.setCenter(av);
+		});
 		
 		
 		
