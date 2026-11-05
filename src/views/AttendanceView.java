@@ -1,11 +1,15 @@
 package views;
 
-import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -13,6 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,19 +30,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.StringConverter;
-import models.Attendance;
 import models.Roster;
-import models.RosterManager;
 import models.Student;
 
 /**
- * Roll call screen. Shows every student from the chosen roster(s) in one list;
- * checking a student marks them present. Saving writes present.txt/absent.txt
- * through {@link Attendance#saveAttendance()}.
+ * Roll call screen. Has two modes, chosen by AttendanceController:
+ *  - {@link #showRosterPicker(List)}: choose one or more rosters
+ *  - {@link #showRollCall}: one checkbox per student (checked = present)
  *
- * Two ways in:
- *  - RosterManagerView "Take Attendance" -> {@link #startRollCall(List)}
- *  - Attendance menu button with nothing chosen -> pick rosters here first
+ * The view never changes the Attendance model. It reports what the user does
+ * through the setOn... handlers, and the controller updates the model.
  */
 public class AttendanceView extends BorderPane {
 
@@ -45,38 +47,43 @@ public class AttendanceView extends BorderPane {
 	final int LIST_VIEW_HEIGHT = 350;
 	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("EEEE, MMM d, yyyy");
 
-	private final RosterManager rm;
-	private Attendance att;
-
 	// Checkbox state for each student in the current roll call
 	private final Map<Student, BooleanProperty> presentProps = new HashMap<>();
 	private final Label countsLabel = new Label();
+	// True while the controller is setting checkboxes, so those changes are not reported back
+	private boolean updatingMarks = false;
 
-	public AttendanceView(RosterManager rm) {
-		this.rm = rm;
+	private Consumer<List<Roster>> onStartRollCall;
+	private BiConsumer<Student, Boolean> onMarkChanged;
+	private Consumer<Boolean> onMarkAll;
+	private Runnable onSave;
+	private Runnable onChangeRosters;
+
+	public AttendanceView() {
 		setPadding(new Insets(10));
-		showRosterPicker();
 	}
 
 	// ---------------------------------------------------------------- step 1
-	/** Lets the user choose one or more rosters when none were passed in. */
-	public void showRosterPicker() {
-		att = null;
+	/** Lets the user choose one or more of the given rosters. */
+	public void showRosterPicker(List<Roster> rosters) {
 		presentProps.clear();
 
 		Label title = heading("Take Attendance");
 		Label hint = new Label("Select one or more rosters (Ctrl/Shift + click) to combine into one roll call.");
 
-		ListView<Roster> picker = new ListView<>(FXCollections.observableArrayList(rm.getRosters()));
+		ListView<Roster> picker = new ListView<>(FXCollections.observableArrayList(rosters));
 		picker.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		picker.setPrefSize(LIST_VIEW_WIDTH, LIST_VIEW_HEIGHT);
 
 		Button start = new Button("Start Roll Call");
 		start.setDisable(true);
-		picker.getSelectionModel().getSelectedItems()
-				.addListener((ListChangeListener<Roster>) c ->
-						start.setDisable(picker.getSelectionModel().getSelectedItems().isEmpty()));
-		start.setOnAction(e -> startRollCall(new ArrayList<>(picker.getSelectionModel().getSelectedItems())));
+		picker.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Roster>) c ->
+				start.setDisable(picker.getSelectionModel().getSelectedItems().isEmpty()));
+		start.setOnAction(e -> {
+			if (onStartRollCall != null) {
+				onStartRollCall.accept(new ArrayList<>(picker.getSelectionModel().getSelectedItems()));
+			}
+		});
 
 		setTop(new VBox(4, title, hint));
 		setCenter(picker);
@@ -84,42 +91,47 @@ public class AttendanceView extends BorderPane {
 	}
 
 	// ---------------------------------------------------------------- step 2
-	/** Builds a single roll call for all students in the given rosters. */
-	public void startRollCall(List<Roster> rosters) {
-		if (rosters == null || rosters.isEmpty()) {
-			showRosterPicker();
-			return;
-		}
-		att = new Attendance(rosters);
+	/**
+	 * Shows a roll call.
+	 *
+	 * @param date      date shown in the heading
+	 * @param rosters   rosters in this roll call
+	 * @param students  students to list, in display order
+	 * @param isPresent initial checkbox state per student
+	 * @param rosterOf  which roster each student came from (shown when there are several rosters)
+	 */
+	public void showRollCall(LocalDate date, List<Roster> rosters, List<Student> students,
+			Predicate<Student> isPresent, Function<Student, Roster> rosterOf) {
 		presentProps.clear();
 
 		// Header: date + which rosters are in this roll call
-		Label title = heading("Attendance - " + att.getDate().format(DATE_FORMAT));
+		Label title = heading("Attendance - " + date.format(DATE_FORMAT));
 		StringBuilder names = new StringBuilder();
-		for (Roster r : att.getRosters()) {
+		for (Roster r : rosters) {
 			if (names.length() > 0) names.append(", ");
 			names.append(rosterCode(r));
 		}
-		Label rosterLabel = new Label("Rosters: " + names);
-		setTop(new VBox(4, title, rosterLabel));
+		setTop(new VBox(4, title, new Label("Rosters: " + names)));
 
 		// Student list with a "present" checkbox per student
-		for (Student s : att.getStudents()) {
-			BooleanProperty prop = new SimpleBooleanProperty(att.isPresent(s));
+		for (Student s : students) {
+			BooleanProperty prop = new SimpleBooleanProperty(isPresent.test(s));
 			prop.addListener((obs, was, isNow) -> {
-				att.mark(s, isNow);
-				updateCounts();
+				if (!updatingMarks && onMarkChanged != null) {
+					onMarkChanged.accept(s, isNow);
+				}
 			});
 			presentProps.put(s, prop);
 		}
-		ListView<Student> studentList = new ListView<>(FXCollections.observableArrayList(att.getStudents()));
+		boolean showRoster = rosters.size() > 1;
+		ListView<Student> studentList = new ListView<>(FXCollections.observableArrayList(students));
 		studentList.setPrefSize(LIST_VIEW_WIDTH, LIST_VIEW_HEIGHT);
 		studentList.setCellFactory(CheckBoxListCell.forListView(presentProps::get, new StringConverter<Student>() {
 			@Override
 			public String toString(Student s) {
 				String label = s.getLastName() + ", " + s.getFirstName();
-				if (att.getRosters().size() > 1) {
-					label += "   (" + rosterCode(att.getRosterFor(s)) + ")";
+				if (showRoster) {
+					label += "   (" + rosterCode(rosterOf.apply(s)) + ")";
 				}
 				return label;
 			}
@@ -133,52 +145,72 @@ public class AttendanceView extends BorderPane {
 
 		// Actions
 		Button allPresent = new Button("Mark All Present");
-		allPresent.setOnAction(e -> setAll(true));
+		allPresent.setOnAction(e -> fireMarkAll(true));
 		Button clearAll = new Button("Clear All");
-		clearAll.setOnAction(e -> setAll(false));
+		clearAll.setOnAction(e -> fireMarkAll(false));
 		Button save = new Button("Save Attendance");
-		save.setOnAction(e -> save());
+		save.setOnAction(e -> run(onSave));
 		Button changeRosters = new Button("Change Rosters");
-		changeRosters.setOnAction(e -> showRosterPicker());
+		changeRosters.setOnAction(e -> run(onChangeRosters));
 
-		updateCounts();
 		setBottom(buttonBar(allPresent, clearAll, save, changeRosters, countsLabel));
 	}
 
-	// ---------------------------------------------------------------- step 3
-	private void save() {
+	/** Updates every checkbox to match the model, without reporting the changes back. */
+	public void setMarks(Predicate<Student> isPresent) {
+		updatingMarks = true;
 		try {
-			att.saveAttendance();
-			Alert done = new Alert(Alert.AlertType.INFORMATION);
-			done.setTitle("Attendance Saved");
-			done.setHeaderText("Attendance saved for " + att.getDate().format(DATE_FORMAT));
-			done.setContentText(String.format("Present: %d%nAbsent: %d",
-					att.getPresentStudents().size(), att.getAbsentStudents().size()));
-			done.showAndWait();
-		} catch (IOException ex) {
-			Alert err = new Alert(Alert.AlertType.ERROR);
-			err.setTitle("Save Failed");
-			err.setHeaderText("Could not write attendance files");
-			err.setContentText(ex.getMessage());
-			err.showAndWait();
+			for (Map.Entry<Student, BooleanProperty> e : presentProps.entrySet()) {
+				e.getValue().set(isPresent.test(e.getKey()));
+			}
+		} finally {
+			updatingMarks = false;
 		}
 	}
+
+	public void setCounts(int present, int absent, int total) {
+		countsLabel.setText(String.format("Present: %d   Absent: %d   Total: %d", present, absent, total));
+	}
+
+	// ---------------------------------------------------------------- step 3
+	public void showSaveSuccess(LocalDate date, int present, int absent) {
+		Alert done = new Alert(Alert.AlertType.INFORMATION);
+		done.setTitle("Attendance Saved");
+		done.setHeaderText("Attendance saved for " + date.format(DATE_FORMAT));
+		done.setContentText(String.format("Present: %d%nAbsent: %d", present, absent));
+		done.showAndWait();
+	}
+
+	public void showSaveError(String message) {
+		Alert err = new Alert(Alert.AlertType.ERROR);
+		err.setTitle("Save Failed");
+		err.setHeaderText("Could not write attendance files");
+		err.setContentText(message);
+		err.showAndWait();
+	}
+
+	// ---------------------------------------------------------------- handlers
+	public void setOnStartRollCall(Consumer<List<Roster>> handler) { onStartRollCall = handler; }
+	public void setOnMarkChanged(BiConsumer<Student, Boolean> handler) { onMarkChanged = handler; }
+	public void setOnMarkAll(Consumer<Boolean> handler) { onMarkAll = handler; }
+	public void setOnSave(Runnable handler) { onSave = handler; }
+	public void setOnChangeRosters(Runnable handler) { onChangeRosters = handler; }
 
 	// ---------------------------------------------------------------- helpers
-	private void setAll(boolean present) {
-		for (BooleanProperty p : presentProps.values()) {
-			p.set(present); // listener updates the Attendance model + counts
+	private void fireMarkAll(boolean present) {
+		if (onMarkAll != null) {
+			onMarkAll.accept(present);
 		}
 	}
 
-	private void updateCounts() {
-		if (att == null) return;
-		countsLabel.setText(String.format("Present: %d   Absent: %d   Total: %d",
-				att.getPresentStudents().size(), att.getAbsentStudents().size(), att.getStudents().size()));
+	private static void run(Runnable handler) {
+		if (handler != null) {
+			handler.run();
+		}
 	}
 
 	private static String rosterCode(Roster r) {
-		return r.getCourseName() + r.getCourseCode() + r.getCourseSection();
+		return r == null ? "?" : r.getCourseName() + r.getCourseCode() + r.getCourseSection();
 	}
 
 	private static Label heading(String text) {
@@ -187,7 +219,7 @@ public class AttendanceView extends BorderPane {
 		return l;
 	}
 
-	private static HBox buttonBar(javafx.scene.Node... nodes) {
+	private static HBox buttonBar(Node... nodes) {
 		HBox bar = new HBox(10, nodes);
 		bar.setPadding(new Insets(8, 0, 0, 0));
 		bar.setAlignment(Pos.CENTER_LEFT);

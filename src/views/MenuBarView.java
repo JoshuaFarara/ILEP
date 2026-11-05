@@ -1,94 +1,65 @@
 package views;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
-public class MenuBarView { // change this class to extend HBox
+/**
+ * The row of navigation buttons at the top of the window. It only reports
+ * clicks; AppController decides what each click does.
+ */
+public class MenuBarView extends HBox {
 
-	final Button btnHome = new Button("Home");
-	final private Button btnRosterManager = new Button("Roster Manager");
-	final Button btnAttendance = new Button("Attendance");
-	final Button btnSlideActivities = new Button("Slide Activities");
-	final Button btnQuiz = new Button("Quiz");
-	final Button btnCodeSubmission = new Button("Code Submission");
-	final Button btnPresentation = new Button("Presentation");
-	final Button btnEC = new Button("EC");
-	
+	private static final double BAR_WIDTH = 805.0;
+	private static final double BAR_HEIGHT = 50.0;
+	private static final double BUTTON_HEIGHT = 35.0;
+
+	private final Button btnHome = new Button("Home");
+	private final Button btnRosterManager = new Button("Roster Manager");
+	private final Button btnAttendance = new Button("Attendance");
+	private final Button btnSlideActivities = new Button("Slide Activities");
+	private final Button btnQuiz = new Button("Quiz");
+	private final Button btnCodeSubmission = new Button("Code Submission");
+	private final Button btnPresentation = new Button("Presentation");
+	private final Button btnEC = new Button("EC"); // not shown yet
+
+	private final List<Button> listButtons = List.of(btnHome, btnRosterManager, btnAttendance,
+			btnSlideActivities, btnQuiz, btnCodeSubmission, btnPresentation);
+
 	private Runnable onHomeClicked;
 	private Runnable onRosterClicked;
 	private Runnable onAttendanceClicked;
 	private Runnable onSlideActivitiesClicked;
 
-//	private RosterManagerView rosterManagerView = new RosterManagerView();
-
-	Button[] arrButtons = { btnHome,btnRosterManager, btnAttendance, btnSlideActivities, btnQuiz, btnCodeSubmission,
-			btnPresentation };
-	protected ArrayList<Button> listButtons = new ArrayList<>(Arrays.asList(arrButtons));
-
 	public MenuBarView() {
-//    	setSpacing(10); // extension updates
-//    	setPadding(new Insets(10)); // extension updates
+		setPrefHeight(BAR_HEIGHT);
+		setPrefWidth(BAR_WIDTH);
+
+		double buttonWidth = BAR_WIDTH / listButtons.size();
+		for (Button button : listButtons) {
+			button.setPrefWidth(buttonWidth);
+			button.setPrefHeight(BUTTON_HEIGHT);
+			getChildren().add(button);
+		}
 		wireButtons();
 	}
 
 	private void wireButtons() {
-		btnHome.setOnAction(e -> {
-			if (onHomeClicked != null) onHomeClicked.run();
-		});
-		btnRosterManager.setOnAction(e -> {
-			if (onRosterClicked != null) onRosterClicked.run();
-		});
-		btnAttendance.setOnAction(e -> {
-			if (onAttendanceClicked != null) onAttendanceClicked.run();
-		});
-		btnSlideActivities.setOnAction(e -> {
-			if (onSlideActivitiesClicked != null) onSlideActivitiesClicked.run();
-		});
-
+		btnHome.setOnAction(e -> run(onHomeClicked));
+		btnRosterManager.setOnAction(e -> run(onRosterClicked));
+		btnAttendance.setOnAction(e -> run(onAttendanceClicked));
+		btnSlideActivities.setOnAction(e -> run(onSlideActivitiesClicked));
 	}
 
-	protected Scene displayMenuBarScene() {
-		VBox root = new VBox();
-		root.getChildren().add(addButtonsToHBox());
-		return new Scene(root);
-	}
-
-	public HBox addButtonsToHBox() {
-		HBox buttonBox = new HBox();
-		buttonBox.setPrefHeight(50);
-		buttonBox.setPrefWidth(805);
-		// buttonBox.setAlignment(Pos.CENTER);
-		// buttonBox.setStyle("-fx-padding: 20;"); // does not work, try to add padding
-		// to the gridpane instead
-		// Set the preferred width to match the window width
-		// add padding and bottom border to the menu bar
-		// buttonBox.setStyle("-fx-border-color: #A99260; -fx-border-width: 0px 0px
-		// 100px 0px;"); // add bottom border to the menu bar
-		// buttonBox.setSpacing(10); // add horizontal gap between buttons
-//        buttonBox.setStyle("-fx-background-color: #041E42;"); // set background color for the menu bar
-
-		for (Button button : listButtons) {
-			int numButtons = listButtons.size();
-			double buttonWidth = 805.0 / numButtons; // Calculate button width based on number of buttons
-			double buttonHeight = 35.0; // Set button height to 50
-			button.setPrefWidth(buttonWidth);
-			button.setPrefHeight(buttonHeight);
-			buttonBox.getChildren().add(button);
+	private static void run(Runnable handler) {
+		if (handler != null) {
+			handler.run();
 		}
-
-		return buttonBox;
 	}
-	
-	public void setOnHomeClicked(Runnable r) {onHomeClicked = r;}
-	public void setOnRosterClicked(Runnable r) {onRosterClicked = r;}
-	public void setOnAttendanceClicked(Runnable r) {onAttendanceClicked = r;}
-	public void setOnSlideActivitiesClicked(Runnable r) {onSlideActivitiesClicked = r;}
 
+	public void setOnHomeClicked(Runnable r) { onHomeClicked = r; }
+	public void setOnRosterClicked(Runnable r) { onRosterClicked = r; }
+	public void setOnAttendanceClicked(Runnable r) { onAttendanceClicked = r; }
+	public void setOnSlideActivitiesClicked(Runnable r) { onSlideActivitiesClicked = r; }
 }

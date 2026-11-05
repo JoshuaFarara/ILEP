@@ -140,6 +140,7 @@ public class Attendance {
 	public void saveAttendance() throws IOException {
 		present = new ArrayList<>(getPresentStudents());
 		absent = new ArrayList<>(getAbsentStudents());
+		presentFile.getAbsoluteFile().getParentFile().mkdirs(); // appData is git-ignored, may not exist
 		try (PrintWriter presentOutput = new PrintWriter(presentFile);
 				PrintWriter absentOutput = new PrintWriter(absentFile)) {
 			for (Student s : present) {

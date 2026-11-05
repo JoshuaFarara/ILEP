@@ -6,218 +6,135 @@ import java.util.function.Consumer;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import models.RosterLoader;
-import models.RosterManager;
 import models.Roster;
 import models.Student;
 
+/**
+ * Roster Manager screen: a list of rosters, a detail panel for the focused
+ * roster, and a "Take Attendance" button. It only displays what it is given
+ * and reports user actions; RosterManagerController does the rest.
+ */
 public class RosterManagerView extends BorderPane {
 	final int LIST_VIEW_WIDTH = 700;
 	final int LIST_VIEW_HEIGHT = 350;
 
-	private Label title = new Label("Roster Manager");
-	private Button selectRoster = new Button("Select");
-	private Button loadRoster = new Button("Load Roster");
-	private RosterManager rm;
-	private RosterLoader rl;
-	private ListView<Roster> rosterListView;
-	private VBox rosterDetailView;
-	Pane selectedRostersPane = new Pane();
-	// Called with the selected rosters when "Take Attendance" is clicked
-	private Consumer<List<Roster>> onTakeAttendance;
+	private final ListView<Roster> rosterListView;
+	private final VBox rosterDetailView;
+	private final Button takeAttendance = new Button("Take Attendance");
+	private final Label selectedInfo = new Label();
 
-	public RosterManagerView(RosterLoader rl, RosterManager rm) {
-		this.rl = rl;
-		this.rm = rm;
-		// Rosters are loaded once in App before views are built; loading here again
-		// would add every roster to the shared RosterManager a second time.
-		if (rm.getRosters().isEmpty()) {
-			rl.loadAll(rm);
-		}
+	private Consumer<List<Roster>> onSelectionChanged;
+	private Consumer<Roster> onRosterFocused;
+	private Runnable onTakeAttendance;
 
-		rosterListView = buildRosterListVeiw();
+	public RosterManagerView() {
+		rosterListView = buildRosterListView();
 		rosterDetailView = buildEmptyDetailPanel();
 
-
-		getChildren().addAll(loadRoster, new ScrollPane(rosterListView));
-//		getChildren().addAll(selectRoster, loadRoster, new ScrollPane(rosterListView));
-
 		setCenter(new ScrollPane(rosterListView));
-		setBottom(showCenterPaneButtons());
-		
-		
-//		setBottom(rlvButtons); 
+		setBottom(buildButtonBar());
 		setRight(rosterDetailView);
-
 	}
 
-	private ListView<Roster> buildRosterListVeiw() {
+	// ------------------------------------------------------------ controller API
+	public void setRosters(List<Roster> rosters) {
+		rosterListView.setItems(FXCollections.observableArrayList(rosters));
+	}
 
-		ListView<Roster> lv = new ListView<>(FXCollections.observableArrayList(rm.getRosters()));
+	public void setSelectionSummary(int rosterCount, int studentCount) {
+		selectedInfo.setText(rosterCount + " roster(s) selected, " + studentCount + " students");
+	}
+
+	public void setTakeAttendanceEnabled(boolean enabled) {
+		takeAttendance.setDisable(!enabled);
+	}
+
+	public void showRosterDetail(Roster roster) {
+		rosterDetailView.getChildren().clear();
+		if (roster == null) {
+			rosterDetailView.getChildren().add(whiteLabel("Select a roster to view details"));
+			return;
+		}
+		ListView<Student> lvStudents = new ListView<>(FXCollections.observableArrayList(roster.getStudents()));
+		rosterDetailView.getChildren().addAll(
+				whiteLabel("CRN: " + roster.getCrn()),
+				whiteLabel("Course: " + roster.getCourseName()),
+				whiteLabel("Section: " + roster.getCourseSection()),
+				whiteLabel("Semester: " + roster.getSemesterTerm() + " " + roster.getYear()),
+				whiteLabel("Students: " + roster.getStudents().size()),
+				new ScrollPane(lvStudents));
+	}
+
+	/** Called with every selected roster whenever the selection changes. */
+	public void setOnSelectionChanged(Consumer<List<Roster>> handler) {
+		this.onSelectionChanged = handler;
+	}
+
+	/** Called with the most recently clicked roster (for the detail panel). */
+	public void setOnRosterFocused(Consumer<Roster> handler) {
+		this.onRosterFocused = handler;
+	}
+
+	public void setOnTakeAttendance(Runnable handler) {
+		this.onTakeAttendance = handler;
+	}
+
+	// ------------------------------------------------------------ layout
+	private ListView<Roster> buildRosterListView() {
+		ListView<Roster> lv = new ListView<>();
 		lv.setPrefSize(LIST_VIEW_WIDTH, LIST_VIEW_HEIGHT);
 		// Ctrl/Shift + click to select several rosters for one combined roll call
 		lv.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 		lv.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-			if (newVal != null) {
-				showRosterDetail(newVal);
+			if (newVal != null && onRosterFocused != null) {
+				onRosterFocused.accept(newVal);
+			}
+		});
+		lv.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Roster>) c -> {
+			if (onSelectionChanged != null) {
+				onSelectionChanged.accept(new ArrayList<>(lv.getSelectionModel().getSelectedItems()));
 			}
 		});
 		return lv;
 	}
-	private HBox showCenterPaneButtons() {
-		HBox listViewButtons = new HBox(10);
-		listViewButtons.setPadding(new Insets(8));
-		listViewButtons.setAlignment(Pos.CENTER_LEFT);
 
-		Button lvRollCall = new Button("Take Attendance");
-		Label selectedInfo = new Label();
-		updateSelectedInfo(selectedInfo);
-		lvRollCall.setDisable(true);
-		rosterListView.getSelectionModel().getSelectedItems()
-				.addListener((ListChangeListener<Roster>) c -> {
-					updateSelectedInfo(selectedInfo);
-					lvRollCall.setDisable(rosterListView.getSelectionModel().getSelectedItems().isEmpty());
-				});
-
-		listViewButtons.getChildren().addAll(lvRollCall, selectedInfo);
-		lvRollCall.setOnAction((ActionEvent e) -> {
-			List<Roster> selected = new ArrayList<>(rosterListView.getSelectionModel().getSelectedItems());
-			if (!selected.isEmpty() && onTakeAttendance != null) {
-				onTakeAttendance.accept(selected);
+	private HBox buildButtonBar() {
+		HBox bar = new HBox(10, takeAttendance, selectedInfo);
+		bar.setPadding(new Insets(8));
+		bar.setAlignment(Pos.CENTER_LEFT);
+		takeAttendance.setDisable(true);
+		takeAttendance.setOnAction(e -> {
+			if (onTakeAttendance != null) {
+				onTakeAttendance.run();
 			}
 		});
-		return listViewButtons;
-	}
-
-	private void updateSelectedInfo(Label label) {
-		List<Roster> selected = rosterListView.getSelectionModel().getSelectedItems();
-		int students = 0;
-		for (Roster r : selected) {
-			students += r.getStudents().size();
-		}
-		label.setText(selected.size() + " roster(s) selected, " + students + " students");
-	}
-
-	/** App wires this to switch to the AttendanceView with the chosen rosters. */
-	public void setOnTakeAttendance(Consumer<List<Roster>> handler) {
-		this.onTakeAttendance = handler;
+		return bar;
 	}
 
 	// shown before any roster is selected
 	private VBox buildEmptyDetailPanel() {
 		VBox box = new VBox();
 		box.setPrefHeight(LIST_VIEW_HEIGHT);
-//		Insets(double top, double right,double bottom,double left); //the formal parameters
 		box.setPadding(new Insets(15, 12, 15, 12));
-		
 		box.setStyle("-fx-background-color: #336699;");
-		Label selectRoster = new Label("Select a roster to view details");
-		selectRoster.setStyle("-fx-text-fill:white");
-		box.getChildren().add(selectRoster);
+		box.getChildren().add(whiteLabel("Select a roster to view details"));
 		return box;
 	}
-//	private HBox showButtonsOnSelection() {
-//		HBox hbox = new HBox();
-////		hbox.setPrefHeight(LIST_VIEW_HEIGHT);
-////		hbox.setPadding(new Insets(100,12 , 100, 12));
-////		rdButtons
-//		rosterDetailView.getChildren().addAll(loadRoster);
-//		return hbox;
-//	};
-	
-	private void showRosterDetail(Roster roster) {
-		rosterDetailView.getChildren().clear();
-		Label crn = new Label("CRN: "      + roster.getCrn());
-		crn.setStyle("-fx-text-fill:white");
-		Label course = new Label("Course: "   + roster.getCourseName());
-		course.setStyle("-fx-text-fill:white");
-		Label section = new Label("Section: "  + roster.getCourseSection());
-		section.setStyle("-fx-text-fill:white");
-		Label semester = new Label("Semester: " + roster.getSemesterTerm() + " " + roster.getYear());
-		semester.setStyle("-fx-text-fill:white");
-		Label studentSize = new Label("Students: " + roster.getStudents().size());
-		studentSize.setStyle("-fx-text-fill:white");
-	
-		ListView<Student> lvStudents = new ListView<>(FXCollections.observableArrayList(roster.getStudents()));
-		ScrollPane viewStudentsInRoster = new ScrollPane(lvStudents);
-//		Group rosterDetailGroup= new Group();
-//		rosterDetailGroup.getStyleClass().add("rd-label-group");
-//		rosterDetailGroup.getChildren().addAll(crn,course,section,semester,studentSize,loadRoster,viewStudentsInRoster
-//				);
-	
-		rosterDetailView.getChildren().addAll(
-	           crn,course,section,semester,studentSize, viewStudentsInRoster
-//	           ,loadRoster	           
-//	           rosterDetailGroup        
-	        );
-//		HBox loadRosterButtonsPane = showButtonsOnSelection();
+
+	private static Label whiteLabel(String text) {
+		Label label = new Label(text);
+		label.setStyle("-fx-text-fill:white");
+		return label;
 	}
-
-//	private void onRosterSelected(Roster roster) {
-//		System.out.printf("Selected: %s%s%n", roster.getCourseCode(), roster.getCourseSection()); // swap for real UI later
-
-//	public static void loadSelectedRoster(RosterManager manager) {
-//		System.out.println("\n=== Loading Single Roster ===");
-//		try {
-//			// String testFilename = "83129-Fall 2025-CSCI1302A.csv"; // replace with choose
-//			// a roster filename method later
-//			Roster selectedRoster = chooseRoster(manager);
-//			System.out.println("For today's attendance, you have selected the following roster:"); // replace today with
-//																									// date method later
-//			System.out.println(selectedRoster);
-//
-//			System.out.println("CRN: " + selectedRoster.getCrn());
-//			System.out.println("Semester: " + selectedRoster.getSemesterTerm() + " " + selectedRoster.getYear());
-//			System.out.println("Course: " + selectedRoster.getCourseName() + selectedRoster.getCourseCode());
-//			System.out.println("Section: " + selectedRoster.getCourseSection());
-//			Text selectedRosterText = new Text(selectedRoster.getCrn()
-//					+ selectedRoster.getSemesterTerm()
-//					+ selectedRoster.getYear()
-//					+ selectedRoster.getCourseName()
-//					+ selectedRoster.getCourseName()
-//					+ selectedRoster.getCourseCode()
-//					+ selectedRoster.getCourseSection());
-//
-		//// return selectedRosterText ;
-//		} catch (Exception e) {
-//			System.err.println("Error loading single roster: " + e.getMessage());
-		//// return null;
-//		}
-
-//	}
-
-//	public static Roster chooseRoster(RosterManager manager) {
-//		try (Scanner input = new Scanner(System.in)) {
-//			System.out.println("Select a roster: ");
-//			for (int i = 0; i < manager.getRosters().size(); i++) {
-//				System.out.println(i + ": " + manager.getRosters().get(i).getRosterPathString());
-//			}
-//			int chosenRosterIndex = input.nextInt();
-//			switch (chosenRosterIndex) {
-//			case 0 -> manager.getRosters().get(0);
-//			case 1 -> manager.getRosters().get(1);
-//			default -> {
-//				System.out.println("Invalid index. Please select a valid roster index.");
-//			}
-//			}
-//			return manager.getRosters().get(chosenRosterIndex);
-//		}
-//	}
 }
