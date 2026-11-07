@@ -6,7 +6,7 @@
 
 ## Goal
 
-Produce an accurate, well-sourced research report on a user-provided topic, pitched at the right audience and depth, and saved to `/outputs`.
+Produce an accurate, well-sourced research report on a user-provided topic, pitched at the right audience and depth, and saved to `/outputs/research`.
 
 ---
 
@@ -49,7 +49,7 @@ Produce an accurate, well-sourced research report on a user-provided topic, pitc
 - Where sources conflict, the conflict is flagged rather than hidden.
 
 **Step 7 - Save and Report**
-- Save to `outputs/<topic>-research-report.md`, with the topic hyphenated and in lowercase.
+- Save to `outputs/research/<topic>-research-report.md`, with the topic hyphenated and in lowercase.
 - Reply with a 2-3 line summary and the file path.
 
 ---

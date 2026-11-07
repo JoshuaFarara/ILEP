@@ -14,6 +14,9 @@ Quick reference notes for building and improving AI workflows.
 | `/workflows` | Process instructions | *How* to do the work |
 | `/outputs` | Finished deliverables | *What* the work produced |
 | `/notes` | Ideas, research, lessons learned | *Why* and *what next* |
+| `/resources` | Course materials and trusted references, by course then type | *What we already know* |
+| `/templates` | Reusable report, lesson, and activity skeletons | *What shape* the output takes |
+| `/drafts` | Work in progress during a run | *Not finished yet* |
 
 ## Lessons Learned
 - Specific inputs produce specific outputs; vague prompts produce generic results.

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "topic": "encapsulation",
+  "course": "CSCI1301",
+  "lessonPlan": "encapsulation-lesson-plan.md",
+  "activities": [
+    {
+      "id": "s1",
+      "type": "SLIDE_ACTIVITIES",
+      "title": "Warm-up: Who Can Touch the Data?",
+      "goal": 1,
+      "slides": [
+        {
+          "heading": "Slide heading",
+          "body": "One or two sentences of content.",
+          "question": "A question students answer about this slide."
+        }
+      ]
+    },
+    {
+      "id": "c1",
+      "type": "CODE_SUBMISSION",
+      "title": "Code Task Title",
+      "goal": 2,
+      "prompt": "What students must write or fix.",
+      "starterCode": "public class Example {\n    // TODO\n}",
+      "expectedOutput": "Exact console output of a correct solution."
+    },
+    {
+      "id": "p1",
+      "type": "PRESENTATION",
+      "title": "Group Explain-Back",
+      "goal": 3,
+      "prompt": "What each group presents.",
+      "groupSize": 3,
+      "minutes": 5
+    },
+    {
+      "id": "q1",
+      "type": "QUIZ",
+      "title": "Exit Ticket",
+      "goal": 1,
+      "questions": [
+        {
+          "prompt": "Question text?",
+          "choices": ["Choice A", "Choice B", "Choice C", "Choice D"],
+          "answerIndex": 1,
+          "explanation": "Why the correct choice is correct."
+        }
+      ]
+    }
+  ]
+}

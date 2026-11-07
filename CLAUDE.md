@@ -20,8 +20,7 @@ Every output should feel like mentorship and advice from an astounding professor
 
 # Communication Style
 
-* Write in clear, multilayered sentences of conversational
-* English and computing theory, terminology and application.
+* Write in clear, multilayered sentences of conversational english and computing theory, terminology and application.
 * Be concise, avoid vague statements and buzzwords.
 * Focus on practical examples and actionable insights.
 * Prioritize clarity over sophistication. 
@@ -47,7 +46,7 @@ Every output should feel like mentorship and advice from an astounding professor
 * Use hyphens instead of spaces.
 * Use descriptive names. 
 * Avoid special characters.
-* 
+
 
 Examples:
 
