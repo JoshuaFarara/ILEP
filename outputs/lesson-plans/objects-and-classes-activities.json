@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "topic": "objects-and-classes",
+  "course": "CSCI1301",
+  "lessonPlan": "objects-and-classes-lesson-plan.md",
+  "activities": [
+    {
+      "id": "s1",
+      "type": "SLIDE_ACTIVITIES",
+      "title": "Blueprint or Building?",
+      "goal": 1,
+      "slides": [
+        {
+          "heading": "Why We Need Classes",
+          "body": "Variables, loops, and arrays can't keep a student's name, GPA, and the methods that use them together. A class bundles related data and behavior into one new type.",
+          "question": "Name something in a program you've written that would be easier to manage as one object."
+        },
+        {
+          "heading": "Class vs. Object",
+          "body": "A class is a blueprint, like a recipe. An object is one instance built from it, like a pie. One class can produce many objects, and each object has its own data.",
+          "question": "If Rectangle is the class, what are two different objects you could create from it?"
+        },
+        {
+          "heading": "State and Behavior",
+          "body": "State is what an object knows, stored in data fields. Behavior is what an object does, written as instance methods.",
+          "question": "For a Book object, list two data fields and one instance method."
+        },
+        {
+          "heading": "Reading a UML Class Diagram",
+          "body": "Three boxes: the class name on top, the data fields (name: type) in the middle, and the constructors and methods (name(params): returnType) on the bottom.",
+          "question": "In 'getArea(): double', what does 'double' tell you?"
+        },
+        {
+          "heading": "Three Constructor Rules",
+          "body": "A constructor has the same name as the class, has no return type (not even void), and runs only when you call new. If you write no constructor, Java adds an empty no-arg default constructor.",
+          "question": "What happens to new Rectangle() if the class only defines Rectangle(double w, double h)?"
+        }
+      ]
+    },
+    {
+      "id": "c1",
+      "type": "CODE_SUBMISSION",
+      "title": "Build a Book from UML",
+      "goal": 3,
+      "prompt": "Write the Book class from the UML diagram: fields title (String, default \"Untitled\"), pages (int, default 1), pagesRead (int, default 0); a no-arg constructor; a constructor Book(String newTitle, int newPages); getPercentRead() returning pagesRead * 100.0 / pages; and describe() returning title + \" (\" + pages + \" pages)\". Do not change TestBook.",
+      "starterCode": "public class TestBook {\n    public static void main(String[] args) {\n        Book unknown = new Book();\n        Book novel = new Book(\"Dune\", 412);\n\n        System.out.println(unknown.describe());\n        System.out.println(novel.describe());\n\n        novel.pagesRead = 103;\n        System.out.println(\"Percent read: \" + novel.getPercentRead() + \"%\");\n    }\n}\n\nclass Book {\n    // TODO: data fields with default values\n\n    // TODO: no-arg constructor\n\n    // TODO: Book(String newTitle, int newPages)\n\n    // TODO: getPercentRead(): double\n\n    // TODO: describe(): String\n}\n",
+      "expectedOutput": "Untitled (1 pages)\nDune (412 pages)\nPercent read: 25.0%"
+    },
+    {
+      "id": "p1",
+      "type": "PRESENTATION",
+      "title": "Explain Your Constructor",
+      "goal": 4,
+      "prompt": "Each partner shows their Book constructor and explains its three rules (same name, no return type, runs on new). Then trace novel.getPercentRead() out loud: which object is used, which fields are read, and what value comes back.",
+      "groupSize": 2,
+      "minutes": 4
+    },
+    {
+      "id": "q1",
+      "type": "QUIZ",
+      "title": "Exit Ticket",
+      "goal": 1,
+      "questions": [
+        {
+          "prompt": "Which statement best describes the relationship between a class and an object?",
+          "choices": [
+            "They are two names for the same thing",
+            "A class is a blueprint; an object is one instance built from it",
+            "An object is a blueprint; a class is one instance built from it",
+            "A class can only ever create one object"
+          ],
+          "answerIndex": 1,
+          "explanation": "A class defines the data fields and methods. Each object made with new is a separate instance with its own copy of that data."
+        },
+        {
+          "prompt": "In a UML class diagram, where do the data fields appear?",
+          "choices": [
+            "Top box, next to the class name",
+            "Middle box",
+            "Bottom box, with the methods",
+            "UML diagrams do not show data fields"
+          ],
+          "answerIndex": 1,
+          "explanation": "The top box holds the class name, the middle box holds data fields, and the bottom box holds constructors and methods."
+        },
+        {
+          "prompt": "A class defines only Rectangle(double w, double h). What does new Rectangle() do?",
+          "choices": [
+            "Creates a rectangle with width and height 0",
+            "Creates a rectangle using the default constructor",
+            "Causes a compile error",
+            "Causes a runtime error"
+          ],
+          "answerIndex": 2,
+          "explanation": "Java adds a default no-arg constructor only when a class defines no constructors at all. Once you write one, you must write the no-arg version yourself."
+        },
+        {
+          "prompt": "Why does Rectangle.getArea() fail to compile, while door.getArea() works?",
+          "choices": [
+            "getArea() is private",
+            "getArea() is an instance method and needs a specific object to work on",
+            "Class names cannot be used with the dot operator",
+            "getArea() must be called inside main"
+          ],
+          "answerIndex": 1,
+          "explanation": "Instance methods use one object's data fields. Math.pow() works through the class name only because it is static."
+        },
+        {
+          "prompt": "Which is a valid constructor header for a class named Book?",
+          "choices": [
+            "void Book(String title)",
+            "Book Book(String title)",
+            "Book(String title)",
+            "public static Book(String title)"
+          ],
+          "answerIndex": 2,
+          "explanation": "A constructor has the same name as the class and no return type. Adding void or Book in front turns it into an ordinary method."
+        }
+      ]
+    }
+  ]
+}
