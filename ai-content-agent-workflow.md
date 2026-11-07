@@ -74,4 +74,28 @@ Followed by the content body using standard Markdown heading and paragraphs.
 | Topic cannot be researched reliably | Notify the user, Proceed only if they confirm assumptions are acceptable. |
 
 
+## Overview 
 
+A multi- step workflow that takes a topic and produces a polished article. 
+
+## Steps
+
+1. **Research** - gather sources and key facts abnoyut te topic
+2. **Outline** - structure the main points sadn sections
+3. **Draft** - generate a full draft from the outline
+4. **Review** - check fo raccuracy,m tone, and completeness
+5. **Finalize** - apply edits adn produce trhe output file;
+
+## Inputs
+- `topic` (string) - the subject to write about
+- `tone` (string) - e.g. `format`, `conversational`, `educational`, `technical`
+- `length` (number) -  target word count
+
+## Outputs 
+
+- Markdown file s aved to `/outputs/`
+
+## Notes 
+
+- Each step can be run independently if prior step's output exists. 
+- Use `/notes/` to capture observations or blockers during a run.
