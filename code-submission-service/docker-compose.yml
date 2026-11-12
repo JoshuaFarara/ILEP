@@ -1,0 +1,20 @@
+# Local development database for the Code Submission service.
+# Start:  docker compose up -d
+# The service itself runs on the host (./gradlew bootRun or the jar), because it starts sandbox
+# containers through the host's Docker. See README.md.
+#
+# SYNTHETIC DATA ONLY. This database is not approved for real student records.
+services:
+  database:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: code_submission
+      POSTGRES_USER: code_submission
+      POSTGRES_PASSWORD: code_submission
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - code-submission-database:/var/lib/postgresql/data
+
+volumes:
+  code-submission-database:
