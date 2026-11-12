@@ -21,6 +21,7 @@ public class ClassSessionController {
 	private final AppState state;
 	private final ClassSessionView view = new ClassSessionView();
 	private final Activities activities = new Activities();
+	private final CodeSubmissionController codeSubmissionController = new CodeSubmissionController();
 
 	// Present students in the order shown (changes when shuffled)
 	private List<Student> students = new ArrayList<>();
@@ -37,9 +38,12 @@ public class ClassSessionController {
 
 		// Attendance marks can change on the Attendance screen, so refresh each time this screen opens
 		state.currentScreenProperty().addListener((obs, oldScreen, newScreen) -> {
+			// Code Submission's live updates run only while its panel is on screen
+			codeSubmissionController.stop();
 			if (newScreen == Screen.CLASS_SESSION) refresh();
 		});
 		state.attendanceSessionProperty().addListener((obs, oldSession, newSession) -> {
+			codeSubmissionController.stop();
 			students = new ArrayList<>();
 			refresh();
 		});
@@ -68,16 +72,25 @@ public class ClassSessionController {
 
 	// ------------------------------------------------------------ view events
 	private void handleActivity(ClassActivity activity) {
+		codeSubmissionController.stop();
+		if (activity == ClassActivity.CODE_SUBMISSION) {
+			// Uses everyone on the selected rosters, not only the present students
+			codeSubmissionController.open(state.getAttendanceSession());
+			view.showPanel(codeSubmissionController.getView());
+			return;
+		}
 		view.showActivity(activity, students.size());
 	}
 
 	private void handleShuffle() {
+		codeSubmissionController.stop();
 		students = activities.shuffle(students);
 		view.setStudents(students);
 		view.showMessage("Students shuffled.");
 	}
 
 	private void handleRandomStudent() {
+		codeSubmissionController.stop();
 		lastPicked = activities.pickRandom(students, lastPicked);
 		if (lastPicked != null) {
 			view.showPickedStudent(lastPicked);
@@ -85,6 +98,7 @@ public class ClassSessionController {
 	}
 
 	private void handleRandomGroups(int groupSize) {
+		codeSubmissionController.stop();
 		view.showGroups(activities.randomGroups(students, groupSize));
 	}
 }
