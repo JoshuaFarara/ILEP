@@ -1,0 +1,16 @@
+# Code Submission service
+
+# Gradle
+.gradle/
+backend/build/
+# The repository-wide *.jar rule would drop the Gradle wrapper; keep it.
+!backend/gradle/wrapper/gradle-wrapper.jar
+
+# Front end
+frontend/node_modules/
+frontend/dist/
+frontend/test-results/
+
+# Local configuration and secrets. Never commit keys or real student data.
+.env
+*.env.local
