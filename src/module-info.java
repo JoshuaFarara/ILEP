@@ -5,6 +5,7 @@
  	requires javafx.media;
  	requires javafx.fxml;
 	requires java.desktop;
+	requires java.net.http;
 
 	exports app;
  	exports models;
