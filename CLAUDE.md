@@ -39,6 +39,8 @@ Every output should feel like mentorship and advice from an astounding professor
 * When multiple approaches exist, explain the tradeoffs. 
 * If uncertain, ask before proceeding. 
 * Review outputs before final delivery.
+* Use descriptive names in all code and data: classes, methods, variables, parameters, API endpoints, JSON fields, database tables and columns, and files. Avoid abbreviations and placeholder names such as `sr`, `tmp`, `data2` or `doStuff`. Example: `studentReference`, not `sr`.
+* When I give feedback about these rules, update this CLAUDE.md file to reflect it: add, change or remove the rule, keep the existing wording style, and show me the change before committing it.
 
 # FileNaming
 
