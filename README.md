@@ -156,12 +156,37 @@ final static File DATA_FOLDER_PATH = new File("C:\\Users\\YourName\\Documents\\I
 ### Date Format
 Dates in CSV files should follow the format: `dd-MMM-yy` (e.g., `30-Oct-25`)
 
+## 💻 Code Submission (preview)
+
+**Class Session → Activities → Code Submission** gives the class a Java assignment in the browser, then shows each student's progress live. The web service lives in [`code-submission-service/`](code-submission-service/README.md).
+
+> **Synthetic data only for now.** Don't use this with real students until the open questions in [`docs/code-submission/policy-compliance.md`](docs/code-submission/policy-compliance.md) are answered (hosting approval, retention, AI-tool approval).
+
+1. Take attendance for the class, so Class Session knows which rosters you're using.
+2. Open **Activities → Code Submission**. The first time, enter the service address and your instructor API key.
+3. Fill in the title, instructions, starter code and AI rule (forbidden / restricted / permitted), then click **Sync roster & create assignment**.
+4. Project the join code. Students open the link and join with the code and their Eagle ID.
+5. The table refreshes every 10 seconds: not started, working or submitted, with last save time and run count. **Close assignment** locks everyone's work.
+
+**What leaves your computer:**
+- Only random pseudonyms, one-way join hashes, the course label (e.g. "CSCI1301A Fall 2026") and the course secret are sent.
+- Names, emails, Eagle IDs and CRNs are never sent. ILEP matches pseudonyms back to names on your computer.
+- The key that does that matching is `src/appData/code-submission-courses.properties`. It is git-ignored and Class I: keep it private.
+
+Requires Java 16+ and `requires java.net.http` (already in `module-info.java`). No extra libraries.
+
 ## 🧪 Testing
 
 Run tests from the `Tests/` directory:
 ```bash
 java -cp bin Tests.RosterLoaderTest
 ```
+
+Code Submission tests (Run As → Java Application, each prints PASS/FAIL):
+- `tests.JsonTextTest`
+- `tests.JoinHashTest`
+- `tests.CodeSubmissionCourseStoreTest`
+- `tests.CodeSubmissionClientTest`: needs a running service, with `INSTRUCTOR_API_KEY` and `CODE_SUBMISSION_URL` set; it skips otherwise.
 
 ## 🤝 Contributing
 
