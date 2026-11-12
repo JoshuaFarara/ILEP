@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: code-submission-service
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/code_submission}
+    username: ${DATABASE_USERNAME:code_submission}
+    password: ${DATABASE_PASSWORD:code_submission}
+  flyway:
+    locations: classpath:db/migration
+  jackson:
+    default-property-inclusion: non_null
+  mvc:
+    problemdetails:
+      enabled: false
+
+server:
+  # Never echo exception details or request data back to clients.
+  error:
+    include-message: never
+    include-stacktrace: never
+    include-binding-errors: never
+
+logging:
+  level:
+    root: INFO
+    # Keep framework request logging quiet: request bodies can contain Class I data.
+    org.springframework.web: WARN
+
+code-submission:
+  # Public address students use; join links are built from it.
+  public-base-url: ${PUBLIC_BASE_URL:http://localhost:8080}
+  instructor:
+    # Development only: an instructor API key created at startup if set. Never commit a real key.
+    development-api-key: ${INSTRUCTOR_API_KEY:}
+  cryptography:
+    # 32 random bytes, base64. Encrypts course secrets at rest. Required.
+    course-secret-encryption-key: ${COURSE_SECRET_ENCRYPTION_KEY:}
+  student-session:
+    token-lifetime: 8h
+    maximum-code-length: 65536
+  join:
+    maximum-failures-per-join-code: 50
+    maximum-failures-per-client-address: 20
+    failure-window: 5m
+  runner:
+    docker-command: docker
+    image: ilep-java-runner:25
+    wall-clock-timeout: 15s
+    program-timeout-seconds: 10
+    memory-limit: 256m
+    cpu-limit: "0.5"
+    process-limit: 64
+    maximum-output-bytes: 65536
+    maximum-standard-input-bytes: 16384
+    maximum-concurrent-runs: 4
