@@ -27,8 +27,6 @@ import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.util.StringConverter;
 import models.Roster;
 import models.Student;
@@ -38,13 +36,13 @@ import models.Student;
  *  - {@link #showRosterPicker(List)}: choose one or more rosters
  *  - {@link #showRollCall}: one checkbox per student (checked = present)
  *
+ * The lists fill the window and grow with it (issue #16).
+ *
  * The view never changes the Attendance model. It reports what the user does
  * through the setOn... handlers, and the controller updates the model.
  */
 public class AttendanceView extends BorderPane {
 
-	final int LIST_VIEW_WIDTH = 700;
-	final int LIST_VIEW_HEIGHT = 350;
 	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("EEEE, MMM d, yyyy");
 
 	// Checkbox state for each student in the current roll call
@@ -74,7 +72,6 @@ public class AttendanceView extends BorderPane {
 
 		ListView<Roster> picker = new ListView<>(FXCollections.observableArrayList(rosters));
 		picker.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		picker.setPrefSize(LIST_VIEW_WIDTH, LIST_VIEW_HEIGHT);
 
 		Button start = new Button("Start Roll Call");
 		start.setDisable(true);
@@ -126,7 +123,6 @@ public class AttendanceView extends BorderPane {
 		}
 		boolean showRoster = rosters.size() > 1;
 		ListView<Student> studentList = new ListView<>(FXCollections.observableArrayList(students));
-		studentList.setPrefSize(LIST_VIEW_WIDTH, LIST_VIEW_HEIGHT);
 		studentList.setCellFactory(CheckBoxListCell.forListView(presentProps::get, new StringConverter<Student>() {
 			@Override
 			public String toString(Student s) {
@@ -219,7 +215,7 @@ public class AttendanceView extends BorderPane {
 
 	private static Label heading(String text) {
 		Label l = new Label(text);
-		l.setFont(Font.font(null, FontWeight.BOLD, 18));
+		l.getStyleClass().add("heading");
 		return l;
 	}
 

@@ -33,6 +33,7 @@ public class AppController {
 	private final RosterManagerController rosterManagerController;
 	private final AttendanceController attendanceController;
 	private final ClassSessionController classSessionController;
+	private final SettingsController settingsController;
 
 	// Chosen at random once per run, from the images folder (issue #17)
 	private final String homeBackgroundUrl;
@@ -57,6 +58,8 @@ public class AppController {
 		rosterManagerController = new RosterManagerController(state);
 		attendanceController = new AttendanceController(state);
 		classSessionController = new ClassSessionController(state);
+		// Applies the saved display settings (dark mode, text size, font, color) right away
+		settingsController = new SettingsController(state, mainView::applyDisplaySettings);
 
 		wireMenu();
 		state.currentScreenProperty().addListener((obs, oldScreen, newScreen) -> show(newScreen));
@@ -73,6 +76,7 @@ public class AppController {
 		menuBar.setOnRosterClicked(() -> state.navigateTo(Screen.ROSTER_MANAGER));
 		menuBar.setOnAttendanceClicked(() -> state.navigateTo(Screen.ATTENDANCE));
 		menuBar.setOnClassSessionClicked(() -> state.navigateTo(Screen.CLASS_SESSION));
+		menuBar.setOnSettingsClicked(() -> state.navigateTo(Screen.SETTINGS));
 	}
 
 	private void show(Screen screen) {
@@ -82,13 +86,14 @@ public class AppController {
 		case ROSTER_MANAGER -> mainView.setContent(rosterManagerController.getView());
 		case ATTENDANCE -> mainView.setContent(attendanceController.getView());
 		case CLASS_SESSION -> mainView.setContent(classSessionController.getView());
+		case SETTINGS -> mainView.setContent(settingsController.getView());
 		}
 	}
 
-	/** Home and Roster Manager share this run's random image; Attendance and Class Session have their own. */
+	/** Home, Roster Manager and Settings share this run's random image; Attendance and Class Session have their own. */
 	private String backgroundFor(Screen screen) {
 		return switch (screen) {
-		case HOME, ROSTER_MANAGER -> homeBackgroundUrl;
+		case HOME, ROSTER_MANAGER, SETTINGS -> homeBackgroundUrl;
 		case ATTENDANCE -> bundledImageUrl(ATTENDANCE_BACKGROUND);
 		case CLASS_SESSION -> bundledImageUrl(CLASS_SESSION_BACKGROUND);
 		};
