@@ -48,13 +48,14 @@ public class AppController {
 		menuBar = new MenuBarView();
 		mainView = new MainView(menuBar);
 
-		// A few random images per run instead of every image in the folder, so startup stays fast
-		List<String> homeImageUrls = new ImageLibrary(imagesFolder)
-				.pickRandomImageUrls(HomeController.MAXIMUM_HOME_IMAGES, new Random());
-		homeBackgroundUrl = homeImageUrls.isEmpty() ? bundledImageUrl(FALLBACK_BACKGROUND) : homeImageUrls.get(0);
+		// Two random images per run (not every image in the folder, so startup stays fast):
+		// one for the background, a different one featured on Home
+		List<String> randomImageUrls = new ImageLibrary(imagesFolder).pickRandomImageUrls(2, new Random());
+		homeBackgroundUrl = randomImageUrls.isEmpty() ? bundledImageUrl(FALLBACK_BACKGROUND) : randomImageUrls.get(0);
+		String featuredImageUrl = randomImageUrls.size() > 1 ? randomImageUrls.get(1) : homeBackgroundUrl;
 
 		// One controller per screen
-		homeController = new HomeController(homeImageUrls);
+		homeController = new HomeController(state, featuredImageUrl);
 		rosterManagerController = new RosterManagerController(state);
 		attendanceController = new AttendanceController(state);
 		classSessionController = new ClassSessionController(state);

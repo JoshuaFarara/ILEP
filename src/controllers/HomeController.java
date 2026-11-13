@@ -1,20 +1,23 @@
 package controllers;
 
-import java.util.List;
-
+import controllers.AppState.Screen;
 import javafx.scene.Parent;
 import views.HomeView;
 
-/** Shows the home screen's images (chosen by {@link AppController}) in the {@link HomeView}. */
+/**
+ * Runs the Home screen: the clock and greeting live in {@link HomeView}; this controller gives it
+ * the featured image (chosen by {@link AppController}) and wires the quick-action buttons.
+ */
 public class HomeController {
-
-	/** At most this many images appear on Home, however many the images folder holds (issue #17). */
-	public static final int MAXIMUM_HOME_IMAGES = 5;
 
 	private final HomeView view = new HomeView();
 
-	public HomeController(List<String> homeImageUrls) {
-		view.setImages(homeImageUrls.subList(0, Math.min(MAXIMUM_HOME_IMAGES, homeImageUrls.size())));
+	/** @param featuredImageUrl the image to show on Home, or null for none */
+	public HomeController(AppState state, String featuredImageUrl) {
+		view.setFeaturedImage(featuredImageUrl);
+		view.setOnTakeAttendance(() -> state.navigateTo(Screen.ATTENDANCE));
+		view.setOnStartClassSession(() -> state.navigateTo(Screen.CLASS_SESSION));
+		view.setOnOpenRosterManager(() -> state.navigateTo(Screen.ROSTER_MANAGER));
 	}
 
 	public Parent getView() {
