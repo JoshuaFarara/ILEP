@@ -13,6 +13,7 @@ import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
@@ -169,6 +170,12 @@ public class ClassSessionView extends BorderPane {
 		Label note = new Label("Coming soon. This activity will run with the " + presentCount + " present students.");
 		note.setWrapText(true);
 		resultPanel.getChildren().setAll(heading(activity.getLabel(), 18), note);
+	}
+
+	/** Shows an activity's own panel (e.g. Code Submission) in the result area, filling the space. */
+	public void showPanel(Node panel) {
+		VBox.setVgrow(panel, Priority.ALWAYS);
+		resultPanel.getChildren().setAll(panel);
 	}
 
 	// ------------------------------------------------------------ handlers

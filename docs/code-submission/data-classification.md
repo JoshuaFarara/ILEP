@@ -81,6 +81,17 @@ Retention value `[RETENTION]` means the period set by the University Records Ret
 | Application logs | request timing, error codes | II, and must contain **no** Class I values | Server | Internal | 90 days `[confirm with ITS]` | System administrators |
 | Client details (browser, screen size) | `Chrome 140, 1440×900` | I (tied to a student session) | Server | TLS | `[RETENTION]` | Instructor |
 
+### 3.6 Files on the instructor's computer (ILEP)
+
+Both files are in `src/appData/`, which `.gitignore` excludes. On macOS and Linux, ILEP makes them readable by the owner only. On Windows they rely on the user profile and disk encryption.
+
+| File | Contents | Class | Leaves the computer? | Retention | Access |
+|---|---|---|---|---|---|
+| `code-submission-settings.properties` | Service address, instructor API key | I (credential) | Key sent only as a request header over TLS | Until replaced; rotate the key each term | Instructor |
+| `code-submission-courses.properties` | Per course: courseReference, course secret, **Eagle ID → studentReference mapping**, current assignment's join code | I (re-identifies pseudonyms) | Only courseReference, course secret, label, studentReferences and join hashes; never the mapping or Eagle IDs | Same as the student records it maps (`[RETENTION]`); delete it at the end of retention | Instructor |
+
+The courses file is the key that turns server pseudonyms back into names. Never commit it, email it, sync it to an unapproved cloud folder, or give it to an AI tool.
+
 ## 4. Reports and exports (DSCS §V.C)
 
 A report inherits the most restrictive class of the data it uses. Every per-student export (CSV, PDF, HTML) is therefore **Class I** and must carry:

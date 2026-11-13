@@ -29,3 +29,40 @@
 	-fx-text-fill: #FFFFFF;
 	}
 
+/* Code Submission panel (Class Session → Activities → Code Submission) */
+.code-submission-scroll,
+.code-submission-scroll > .viewport {
+	-fx-background-color: transparent;
+}
+
+.code-submission-join-box {
+	-fx-background-color: rgba(255, 255, 255, 0.85);
+	-fx-border-color: #336699;
+	-fx-border-radius: 6;
+	-fx-background-radius: 6;
+}
+
+.code-submission-join-code {
+	-fx-font-family: "Consolas", "Menlo", "DejaVu Sans Mono", monospace;
+	-fx-font-size: 34px;
+	-fx-font-weight: bold;
+	-fx-text-fill: #1f4e8c;
+}
+
+.code-submission-code {
+	-fx-font-family: "Consolas", "Menlo", "DejaVu Sans Mono", monospace;
+}
+
+.code-submission-muted {
+	-fx-text-fill: #4a5462;
+}
+
+.code-submission-error {
+	-fx-background-color: #fdecea;
+	-fx-border-color: #e5a39c;
+	-fx-border-radius: 4;
+	-fx-background-radius: 4;
+	-fx-text-fill: #8a1c12;
+	-fx-padding: 6 10 6 10;
+}
+
