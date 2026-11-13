@@ -1,9 +1,13 @@
 package controllers;
 
 import java.io.File;
+import java.net.URL;
+import java.util.List;
+import java.util.Random;
 
 import controllers.AppState.Screen;
 import javafx.scene.Parent;
+import models.ImageLibrary;
 import models.RosterLoader;
 import models.RosterManager;
 import views.MainView;
@@ -16,6 +20,11 @@ import views.MenuBarView;
  */
 public class AppController {
 
+	// Fixed backgrounds (issue #17); bundled with the app in src/assets/images
+	private static final String ATTENDANCE_BACKGROUND = "/assets/images/eduChemBuildingLake.jpg";
+	private static final String CLASS_SESSION_BACKGROUND = "/assets/images/attendance-background.png";
+	private static final String FALLBACK_BACKGROUND = "/assets/images/sweetHeartCircleFront.jpg";
+
 	private final AppState state;
 	private final MainView mainView;
 	private final MenuBarView menuBar;
@@ -24,6 +33,9 @@ public class AppController {
 	private final RosterManagerController rosterManagerController;
 	private final AttendanceController attendanceController;
 	private final ClassSessionController classSessionController;
+
+	// Chosen at random once per run, from the images folder (issue #17)
+	private final String homeBackgroundUrl;
 
 	public AppController(File imagesFolder) {
 		// Model: load rosters once; every controller shares them through AppState
@@ -35,8 +47,13 @@ public class AppController {
 		menuBar = new MenuBarView();
 		mainView = new MainView(menuBar);
 
+		// A few random images per run instead of every image in the folder, so startup stays fast
+		List<String> homeImageUrls = new ImageLibrary(imagesFolder)
+				.pickRandomImageUrls(HomeController.MAXIMUM_HOME_IMAGES, new Random());
+		homeBackgroundUrl = homeImageUrls.isEmpty() ? bundledImageUrl(FALLBACK_BACKGROUND) : homeImageUrls.get(0);
+
 		// One controller per screen
-		homeController = new HomeController(imagesFolder);
+		homeController = new HomeController(homeImageUrls);
 		rosterManagerController = new RosterManagerController(state);
 		attendanceController = new AttendanceController(state);
 		classSessionController = new ClassSessionController(state);
@@ -59,11 +76,31 @@ public class AppController {
 	}
 
 	private void show(Screen screen) {
+		mainView.setBackgroundImage(backgroundFor(screen));
 		switch (screen) {
 		case HOME -> mainView.setContent(homeController.getView());
 		case ROSTER_MANAGER -> mainView.setContent(rosterManagerController.getView());
 		case ATTENDANCE -> mainView.setContent(attendanceController.getView());
 		case CLASS_SESSION -> mainView.setContent(classSessionController.getView());
 		}
+	}
+
+	/** Home and Roster Manager share this run's random image; Attendance and Class Session have their own. */
+	private String backgroundFor(Screen screen) {
+		return switch (screen) {
+		case HOME, ROSTER_MANAGER -> homeBackgroundUrl;
+		case ATTENDANCE -> bundledImageUrl(ATTENDANCE_BACKGROUND);
+		case CLASS_SESSION -> bundledImageUrl(CLASS_SESSION_BACKGROUND);
+		};
+	}
+
+	/** URL of an image bundled with the app, or null if it is missing (the screen then has no background). */
+	private static String bundledImageUrl(String resourcePath) {
+		URL resource = AppController.class.getResource(resourcePath);
+		if (resource == null) {
+			System.err.println("Background image not found: " + resourcePath);
+			return null;
+		}
+		return resource.toExternalForm();
 	}
 }
