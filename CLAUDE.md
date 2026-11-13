@@ -1,6 +1,6 @@
-Everything looks premium
-Shorter messages
-Never send anything without asking me first
+Match ILEP's existing look: accessible contrast, no clutter.
+Concise by default; explain in depth only when I ask or when teaching a concept.
+Pushing feature branches is fine. Ask before opening pull requests, merging, commenting on GitHub, or contacting anyone.
 
 # Project Content
 
@@ -20,7 +20,7 @@ Every output should feel like mentorship and advice from an astounding professor
 
 # Communication Style
 
-* Write in clear, multilayered sentences of conversational english and computing theory, terminology and application.
+* Write in clear, conversational English, using computing terminology where it helps.
 * Be concise, avoid vague statements and buzzwords.
 * Focus on practical examples and actionable insights.
 * Prioritize clarity over sophistication. 
@@ -29,8 +29,8 @@ Every output should feel like mentorship and advice from an astounding professor
 
 # Rules
 
-* Always ask at least three clarifying questions before starting any complex task. 
-* Always present a plan before executing. 
+* Ask clarifying questions when requirements are missing or ambiguous; skip them when the issue or request fully specifies the work.
+* Present a plan before executing anything beyond a small fix (a typo or one-line change).
 * Never make assumptions when important information is missing. 
 * Keep outputs concise and relevant.
 * Do not add filler content to increase length. 
@@ -41,6 +41,14 @@ Every output should feel like mentorship and advice from an astounding professor
 * Review outputs before final delivery.
 * Use descriptive names in all code and data: classes, methods, variables, parameters, API endpoints, JSON fields, database tables and columns, and files. Avoid abbreviations and placeholder names such as `sr`, `tmp`, `data2` or `doStuff`. Example: `studentReference`, not `sr`.
 * When I give feedback about these rules, update this CLAUDE.md file to reflect it: add, change or remove the rule, keep the existing wording style, and show me the change before committing it.
+
+# Project Workflow
+
+* One branch and one pull request per GitHub issue. Name branches `issue-<number>-<short-description>`, and reference the issue in commits and pull requests (e.g. "Fixes #17").
+* ILEP (JavaFX desktop app in `src/`) has no build tool: it is compiled in Eclipse with JavaFX added locally. `App.java` (`IMAGES_FOLDER`) and `RosterLoader.java` (`DATA_FOLDER_PATH`) use hardcoded `H:\git\ILEP\...` paths, and ILEP must be launched from the repository root so the stylesheet path works. Tests are plain `main` classes in `src/tests/` that print PASS/FAIL.
+* Code Submission service (`code-submission-service/`): run `./gradlew test` in `backend/`. Sandbox tests need Docker; skip them with `-PexcludeDockerTests`. See its README.
+* Synthetic data only: never put real rosters, Eagle IDs, names or emails into code, tests, commits, screenshots or AI tools. See `docs/code-submission/` for the governing policies.
+* The stricter original rules are saved in `notes/claude-md-original-rules.md` for later phases.
 
 # FileNaming
 
