@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 
-/** Home screen: shows a grid of images. Which images to show is decided by HomeController. */
+/** Home screen: shows a few images. Which images to show is decided by HomeController. */
 public class HomeView extends FlowPane {
 
 	private static final int IMAGE_WIDTH = 200;
@@ -18,20 +18,26 @@ public class HomeView extends FlowPane {
 		setPrefWrapLength(900);
 	}
 
-	/** Replaces the displayed images with the given image URLs. */
+	/**
+	 * Replaces the displayed images with the given image URLs. Each image is scaled to thumbnail
+	 * size while it loads, and loads in the background, so large photos don't slow startup.
+	 */
 	public void setImages(List<String> imageUrls) {
 		getChildren().clear();
 		for (String url : imageUrls) {
-			Image image = new Image(url);
-			if (image.isError()) {
-				System.err.println("Skipping image: " + url);
-				continue;
-			}
-			ImageView iv = new ImageView(image);
-			iv.setFitWidth(IMAGE_WIDTH);
-			iv.setFitHeight(IMAGE_HEIGHT);
-			iv.setPreserveRatio(true);
-			getChildren().add(iv);
+			Image image = new Image(url, IMAGE_WIDTH, IMAGE_HEIGHT, true, true, true);
+			ImageView imageView = new ImageView(image);
+			imageView.setFitWidth(IMAGE_WIDTH);
+			imageView.setFitHeight(IMAGE_HEIGHT);
+			imageView.setPreserveRatio(true);
+			// An unreadable file is removed once loading fails, instead of leaving an empty gap
+			image.errorProperty().addListener((observable, hadError, hasError) -> {
+				if (hasError) {
+					System.err.println("Skipping image: " + url);
+					getChildren().remove(imageView);
+				}
+			});
+			getChildren().add(imageView);
 		}
 	}
 }
