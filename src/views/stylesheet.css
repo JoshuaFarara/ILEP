@@ -133,3 +133,15 @@
 .settings-saved {
 	-fx-text-fill: #1d6b3a;
 }
+
+/* Home screen */
+.home-clock {
+	-fx-font-size: 4em;
+	-fx-font-weight: bold;
+}
+
+.home-action-button {
+	-fx-font-size: 1.15em;
+	-fx-padding: 8 18 10 18;
+}
+
