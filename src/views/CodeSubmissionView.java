@@ -33,8 +33,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 /**
  * The Code Submission panel shown inside Class Session. Like the other views it only displays what
@@ -337,9 +335,10 @@ public class CodeSubmissionView extends VBox {
 		return label;
 	}
 
+	/** A bold heading (size 18 = "heading" style class, relative to the text size in Settings). */
 	private static Label heading(String text, double size) {
 		Label label = new Label(text);
-		label.setFont(Font.font(null, FontWeight.BOLD, size));
+		label.getStyleClass().add(size >= 24 ? "heading-large" : size >= 16 ? "heading" : "heading-small");
 		return label;
 	}
 

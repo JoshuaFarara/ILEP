@@ -14,6 +14,9 @@ import javafx.stage.Stage;
 public class App extends Application {
 	final int WINDOW_WIDTH = 805;
 	final int WINDOW_HEIGHT = 600;
+	// Smallest size that still fits every screen; the window can grow as large as the display (issue #16)
+	final int MINIMUM_WINDOW_WIDTH = 640;
+	final int MINIMUM_WINDOW_HEIGHT = 480;
 //	final static File IMAGES_FOLDER = new File("C:\\Users\\jfarara\\Documents\\Github\\ILEP\\src\\assets\\images"); //laptop
 	final static File IMAGES_FOLDER = new File("H:\\git\\ILEP\\src\\assets\\images"); //office desktop
 
@@ -27,6 +30,9 @@ public class App extends Application {
 		scene.getStylesheets().add("src/views/stylesheet.css");
 		primaryStage.setTitle("Interactive Learning and Engagement Platform"); // Set the stage title
 		primaryStage.setScene(scene); // Place the scene in the stage
+		primaryStage.setResizable(true);
+		primaryStage.setMinWidth(MINIMUM_WINDOW_WIDTH);
+		primaryStage.setMinHeight(MINIMUM_WINDOW_HEIGHT);
 		primaryStage.show(); // Display the stage
 	}
 

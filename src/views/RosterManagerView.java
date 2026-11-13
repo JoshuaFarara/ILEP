@@ -11,10 +11,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import models.Roster;
 import models.Student;
@@ -25,8 +25,8 @@ import models.Student;
  * and reports user actions; RosterManagerController does the rest.
  */
 public class RosterManagerView extends BorderPane {
-	final int LIST_VIEW_WIDTH = 700;
-	final int LIST_VIEW_HEIGHT = 350;
+	// The detail panel keeps a readable width; the roster list takes the rest of the window (issue #16)
+	private static final double DETAIL_PANEL_WIDTH = 260;
 
 	private final ListView<Roster> rosterListView;
 	private final VBox rosterDetailView;
@@ -41,7 +41,7 @@ public class RosterManagerView extends BorderPane {
 		rosterListView = buildRosterListView();
 		rosterDetailView = buildEmptyDetailPanel();
 
-		setCenter(new ScrollPane(rosterListView));
+		setCenter(rosterListView);
 		setBottom(buildButtonBar());
 		setRight(rosterDetailView);
 	}
@@ -66,13 +66,14 @@ public class RosterManagerView extends BorderPane {
 			return;
 		}
 		ListView<Student> lvStudents = new ListView<>(FXCollections.observableArrayList(roster.getStudents()));
+		VBox.setVgrow(lvStudents, Priority.ALWAYS);
 		rosterDetailView.getChildren().addAll(
 				whiteLabel("CRN: " + roster.getCrn()),
 				whiteLabel("Course: " + roster.getCourseName()),
 				whiteLabel("Section: " + roster.getCourseSection()),
 				whiteLabel("Semester: " + roster.getSemesterTerm() + " " + roster.getYear()),
 				whiteLabel("Students: " + roster.getStudents().size()),
-				new ScrollPane(lvStudents));
+				lvStudents);
 	}
 
 	/** Called with every selected roster whenever the selection changes. */
@@ -92,7 +93,6 @@ public class RosterManagerView extends BorderPane {
 	// ------------------------------------------------------------ layout
 	private ListView<Roster> buildRosterListView() {
 		ListView<Roster> lv = new ListView<>();
-		lv.setPrefSize(LIST_VIEW_WIDTH, LIST_VIEW_HEIGHT);
 		// Ctrl/Shift + click to select several rosters for one combined roll call
 		lv.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -124,17 +124,18 @@ public class RosterManagerView extends BorderPane {
 
 	// shown before any roster is selected
 	private VBox buildEmptyDetailPanel() {
-		VBox box = new VBox();
-		box.setPrefHeight(LIST_VIEW_HEIGHT);
+		VBox box = new VBox(4);
+		box.setPrefWidth(DETAIL_PANEL_WIDTH);
+		box.setMinWidth(180);
 		box.setPadding(new Insets(15, 12, 15, 12));
-		box.setStyle("-fx-background-color: #336699;");
+		box.getStyleClass().add("roster-detail-panel");
 		box.getChildren().add(whiteLabel("Select a roster to view details"));
 		return box;
 	}
 
 	private static Label whiteLabel(String text) {
 		Label label = new Label(text);
-		label.setStyle("-fx-text-fill:white");
+		label.setWrapText(true);
 		return label;
 	}
 }

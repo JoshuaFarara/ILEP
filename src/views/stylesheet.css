@@ -11,8 +11,16 @@
 }
 */
 
+/* Shared colors. Settings can override -ilep-button-text-color (custom text color),
+   and dark-theme.css overrides all of them in dark mode. */
+.root {
+    -ilep-button-text-color: rgb(49, 89, 23);
+    -ilep-panel-color: #336699;
+    -ilep-card-background: rgba(255, 255, 255, 0.7);
+}
+
 .button{
-    -fx-text-fill: rgb(49, 89, 23);
+    -fx-text-fill: -ilep-button-text-color;
  /*    -fx-border-color: rgb(49, 89, 23);*/
     -fx-border-radius: 5;
     -fx-padding: 3 6 6 6;
@@ -44,7 +52,7 @@
 
 .code-submission-join-code {
 	-fx-font-family: "Consolas", "Menlo", "DejaVu Sans Mono", monospace;
-	-fx-font-size: 34px;
+	-fx-font-size: 2.6em;
 	-fx-font-weight: bold;
 	-fx-text-fill: #1f4e8c;
 }
@@ -66,3 +74,62 @@
 	-fx-padding: 6 10 6 10;
 }
 
+
+/* Headings. Sizes are relative (em), so they follow the text size chosen in Settings. */
+.heading-large {
+	-fx-font-size: 2.1em;
+	-fx-font-weight: bold;
+}
+
+.heading {
+	-fx-font-size: 1.4em;
+	-fx-font-weight: bold;
+}
+
+.heading-small {
+	-fx-font-size: 1.05em;
+	-fx-font-weight: bold;
+}
+
+/* Roster Manager detail panel */
+.roster-detail-panel {
+	-fx-background-color: -ilep-panel-color;
+}
+
+.roster-detail-panel .label {
+	-fx-text-fill: white;
+}
+
+/* Class Session random-group cards */
+.student-group-card {
+	-fx-border-color: -ilep-panel-color;
+	-fx-border-radius: 4;
+	-fx-background-color: -ilep-card-background;
+	-fx-padding: 6;
+}
+
+/* Menu bar settings (gear) button */
+.settings-gear-button {
+	-fx-padding: 4 10 4 10;
+}
+
+.settings-gear-icon {
+	-fx-fill: -ilep-button-text-color;
+}
+
+/* Settings screen */
+.settings-section {
+	-fx-background-color: -ilep-card-background;
+	-fx-background-radius: 6;
+	-fx-border-color: derive(-fx-background, -20%);
+	-fx-border-radius: 6;
+	-fx-padding: 12;
+}
+
+.settings-warning {
+	-fx-text-fill: #8a1c12;
+}
+
+.settings-saved {
+	-fx-text-fill: #1d6b3a;
+}

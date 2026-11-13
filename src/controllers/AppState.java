@@ -25,7 +25,7 @@ public class AppState {
 
 	/** The screens the main window can show in its center area. */
 	public enum Screen {
-		HOME, ROSTER_MANAGER, ATTENDANCE, CLASS_SESSION
+		HOME, ROSTER_MANAGER, ATTENDANCE, CLASS_SESSION, SETTINGS
 	}
 
 	private final RosterManager rosterManager;

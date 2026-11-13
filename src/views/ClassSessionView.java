@@ -28,8 +28,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 import models.ClassActivity;
 import models.Roster;
@@ -47,8 +45,9 @@ public class ClassSessionView extends BorderPane {
 
 	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy");
 	private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("h:mm:ss a");
+	// The student list keeps a readable width; activities use the rest of the window (issue #16)
 	private static final int LIST_WIDTH = 260;
-	private static final int LIST_HEIGHT = 360;
+	private static final int LIST_MINIMUM_WIDTH = 160;
 	private static final int DEFAULT_GROUP_SIZE = 3;
 	private static final int MAX_GROUP_SIZE = 8;
 
@@ -72,9 +71,8 @@ public class ClassSessionView extends BorderPane {
 		setPadding(new Insets(10));
 
 		// Header: title on the left, live date + time on the right
-		Label title = heading("Class Session", 18);
-		dateLabel.setFont(Font.font(null, FontWeight.BOLD, 14));
-		timeLabel.setFont(Font.font(14));
+		Label title = heading("Class Session", "heading");
+		dateLabel.getStyleClass().add("heading-small");
 		VBox clockBox = new VBox(2, dateLabel, timeLabel);
 		clockBox.setAlignment(Pos.CENTER_RIGHT);
 		Region spacer = new Region();
@@ -85,7 +83,9 @@ public class ClassSessionView extends BorderPane {
 		setTop(new VBox(6, header, buildMenuBar(), sessionInfo));
 
 		// Body: present students on the left, activity results on the right
-		studentList.setPrefSize(LIST_WIDTH, LIST_HEIGHT);
+		studentList.setPrefWidth(LIST_WIDTH);
+		studentList.setMinWidth(LIST_MINIMUM_WIDTH);
+		studentList.setMaxHeight(Double.MAX_VALUE);
 		resultPanel.setPadding(new Insets(0, 0, 0, 10));
 		HBox.setHgrow(resultPanel, Priority.ALWAYS);
 		sessionContent = new HBox(studentList, resultPanel);
@@ -144,18 +144,17 @@ public class ClassSessionView extends BorderPane {
 	public void showPickedStudent(Student student) {
 		studentList.getSelectionModel().select(student);
 		studentList.scrollTo(student);
-		resultPanel.getChildren().setAll(new Label("Random student:"), heading(displayName(student), 28));
+		resultPanel.getChildren().setAll(new Label("Random student:"), heading(displayName(student), "heading-large"));
 	}
 
 	public void showGroups(List<List<Student>> groups) {
+		// Inside a ScrollPane that fits its width, the cards wrap to the window's width (issue #16)
 		FlowPane flow = new FlowPane(10, 10);
-		flow.setPrefWrapLength(420);
 		for (int i = 0; i < groups.size(); i++) {
 			VBox box = new VBox(2);
-			box.setPadding(new Insets(6));
 			box.setPrefWidth(130);
-			box.setStyle("-fx-border-color: #336699; -fx-border-radius: 4; -fx-background-color: rgba(255,255,255,0.7);");
-			box.getChildren().add(heading("Group " + (i + 1), 13));
+			box.getStyleClass().add("student-group-card");
+			box.getChildren().add(heading("Group " + (i + 1), "heading-small"));
 			for (Student s : groups.get(i)) {
 				box.getChildren().add(new Label(displayName(s)));
 			}
@@ -163,13 +162,14 @@ public class ClassSessionView extends BorderPane {
 		}
 		ScrollPane scroll = new ScrollPane(flow);
 		scroll.setFitToWidth(true);
+		VBox.setVgrow(scroll, Priority.ALWAYS);
 		resultPanel.getChildren().setAll(new Label(groups.size() + " random groups:"), scroll);
 	}
 
 	public void showActivity(ClassActivity activity, int presentCount) {
 		Label note = new Label("Coming soon. This activity will run with the " + presentCount + " present students.");
 		note.setWrapText(true);
-		resultPanel.getChildren().setAll(heading(activity.getLabel(), 18), note);
+		resultPanel.getChildren().setAll(heading(activity.getLabel(), "heading"), note);
 	}
 
 	/** Shows an activity's own panel (e.g. Code Submission) in the result area, filling the space. */
@@ -247,9 +247,10 @@ public class ClassSessionView extends BorderPane {
 		}
 	}
 
-	private static Label heading(String text, double size) {
+	/** A bold heading; its size comes from the style class, relative to the text size in Settings. */
+	private static Label heading(String text, String headingStyleClass) {
 		Label l = new Label(text);
-		l.setFont(Font.font(null, FontWeight.BOLD, size));
+		l.getStyleClass().add(headingStyleClass);
 		return l;
 	}
 }

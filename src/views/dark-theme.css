@@ -1,0 +1,47 @@
+/*
+    Dark mode for ILEP (Settings → Dark mode, issue #15).
+    Added on top of stylesheet.css. JavaFX's Modena theme derives most colors from the few
+    values below, so buttons, lists, tables and text fields all follow automatically.
+*/
+.root {
+    -fx-base: #3c3f41;
+    -fx-background: #2b2b2b;
+    -fx-control-inner-background: #313335;
+    -fx-control-inner-background-alt: #36393b;
+    -fx-accent: #4a88c7;
+    -fx-focus-color: #6ea8fe;
+    -fx-faint-focus-color: #6ea8fe33;
+    -fx-selection-bar-non-focused: #4b4f52;
+
+    -ilep-button-text-color: #a5d68f;
+    -ilep-panel-color: #2d4f73;
+    -ilep-card-background: rgba(43, 43, 43, 0.85);
+}
+
+.settings-warning {
+    -fx-text-fill: #ff8a80;
+}
+
+.settings-saved {
+    -fx-text-fill: #7ee2a8;
+}
+
+/* Code Submission panel */
+.code-submission-join-box {
+    -fx-background-color: rgba(43, 43, 43, 0.9);
+    -fx-border-color: #4a88c7;
+}
+
+.code-submission-join-code {
+    -fx-text-fill: #8fbcff;
+}
+
+.code-submission-muted {
+    -fx-text-fill: #b8c0cc;
+}
+
+.code-submission-error {
+    -fx-background-color: #3a1d1b;
+    -fx-border-color: #7a3530;
+    -fx-text-fill: #ffb4ab;
+}
