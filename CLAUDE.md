@@ -44,6 +44,7 @@ Every output should feel like mentorship and advice from an astounding professor
 
 # Project Workflow
 
+* Make me the author of every commit: `Joshua Farara <109557415+JoshuaFarara@users.noreply.github.com>` (my GitHub no-reply address), with Claude added as a co-author.
 * One branch and one pull request per GitHub issue. Name branches `issue-<number>-<short-description>`, and reference the issue in commits and pull requests (e.g. "Fixes #17").
 * ILEP (JavaFX desktop app in `src/`) has no build tool: it is compiled in Eclipse with JavaFX added locally. `App.java` (`IMAGES_FOLDER`) and `RosterLoader.java` (`DATA_FOLDER_PATH`) use hardcoded `H:\git\ILEP\...` paths, and ILEP must be launched from the repository root so the stylesheet path works. Tests are plain `main` classes in `src/tests/` that print PASS/FAIL.
 * Code Submission service (`code-submission-service/`): run `./gradlew test` in `backend/`. Sandbox tests need Docker; skip them with `-PexcludeDockerTests`. See its README.
