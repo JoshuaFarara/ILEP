@@ -125,20 +125,47 @@ public class DockerJavaCodeRunner implements JavaCodeRunner {
 				"--user", "65534:65534",
 				"--env", "CLASS_NAME=" + className,
 				"--env", "PROGRAM_TIMEOUT_SECONDS=" + runnerProperties.programTimeoutSeconds(),
-				"--volume", submissionDirectory.toAbsolutePath() + ":/submission:ro",
+				// --mount instead of --volume: a Windows path's drive-letter colon ("C:\...") would
+				// otherwise be confused with --volume's own ":" separators
+				"--mount", bindMountReadOnly(submissionDirectory.toAbsolutePath().toString(), "/submission"),
 				runnerProperties.image()));
 		return command;
 	}
 
+	/**
+	 * A read-only bind mount in Docker's --mount format. Docker reads that value as CSV, so a field
+	 * containing a comma or quote is quoted (quotes doubled).
+	 */
+	static String bindMountReadOnly(String hostPath, String containerPath) {
+		String sourceField = "source=" + hostPath;
+		if (sourceField.contains(",") || sourceField.contains("\"")) {
+			sourceField = "\"" + sourceField.replace("\"", "\"\"") + "\"";
+		}
+		return "type=bind," + sourceField + ",target=" + containerPath + ",readonly";
+	}
+
 	private Path writeSubmissionFiles(String className, String sourceCode, String standardInput) throws IOException {
-		Path submissionDirectory = Files.createTempDirectory("code-run-",
-				PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwxr-xr-x")));
-		var readableByAll = PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-r--r--"));
-		Path sourceFile = Files.createFile(submissionDirectory.resolve(className + ".java"), readableByAll);
+		Path submissionDirectory = Files.createTempDirectory("code-run-");
+		setPermissionsWhereSupported(submissionDirectory, "rwxr-xr-x");
+		Path sourceFile = submissionDirectory.resolve(className + ".java");
 		Files.writeString(sourceFile, sourceCode, StandardCharsets.UTF_8);
-		Path inputFile = Files.createFile(submissionDirectory.resolve("input.txt"), readableByAll);
+		setPermissionsWhereSupported(sourceFile, "rw-r--r--");
+		Path inputFile = submissionDirectory.resolve("input.txt");
 		Files.writeString(inputFile, standardInput, StandardCharsets.UTF_8);
+		setPermissionsWhereSupported(inputFile, "rw-r--r--");
 		return submissionDirectory;
+	}
+
+	/**
+	 * On Linux and macOS the container's unprivileged user needs read access to the submission
+	 * files. Windows has no POSIX permissions; there Docker Desktop makes the mounted files readable.
+	 */
+	private static void setPermissionsWhereSupported(Path path, String permissions) throws IOException {
+		try {
+			Files.setPosixFilePermissions(path, PosixFilePermissions.fromString(permissions));
+		} catch (UnsupportedOperationException windowsFileSystem) {
+			// Nothing to set on Windows.
+		}
 	}
 
 	private record CappedOutput(String text, boolean truncated) {

@@ -1,1 +1,12 @@
 * text=auto
+
+# Scripts that run inside Linux containers or Unix shells must keep Unix (LF) line endings,
+# even when Git on Windows converts other files to CRLF. A CRLF shell script fails in the
+# sandbox container with "/bin/sh^M: not found".
+*.sh text eol=lf
+code-submission-service/backend/gradlew text eol=lf
+Dockerfile text eol=lf
+
+# Windows command scripts need Windows (CRLF) line endings
+*.cmd text eol=crlf
+*.bat text eol=crlf

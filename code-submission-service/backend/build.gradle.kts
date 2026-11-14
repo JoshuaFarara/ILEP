@@ -60,7 +60,13 @@ val generatedStaticResources = layout.buildDirectory.dir("generated-resources/fr
 val buildFrontend by tasks.registering(Exec::class) {
     description = "Builds the React student editor with npm."
     workingDir = frontendDirectory.asFile
-    commandLine("sh", "-c", "npm ci && npm run build")
+    // Windows has no "sh"; run the same npm commands through cmd there
+    val buildCommand = "npm ci && npm run build"
+    if (System.getProperty("os.name").lowercase().contains("windows")) {
+        commandLine("cmd", "/c", buildCommand)
+    } else {
+        commandLine("sh", "-c", buildCommand)
+    }
     inputs.dir(frontendDirectory.dir("src"))
     inputs.files(frontendDirectory.file("package.json"), frontendDirectory.file("package-lock.json"), frontendDirectory.file("index.html"))
     outputs.dir(frontendDirectory.dir("dist"))

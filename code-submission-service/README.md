@@ -36,6 +36,9 @@ The server stores the course secret encrypted (AES-256-GCM) and the join hash. I
 
 ## Run it locally
 
+On **Windows**, follow [`docs/code-submission/windows-development-guide.md`](../docs/code-submission/windows-development-guide.md) (PowerShell steps, with and without admin rights). The steps below are for macOS and Linux.
+
+
 Requirements: JDK 25, Docker, Node.js 22+.
 
 ```bash
